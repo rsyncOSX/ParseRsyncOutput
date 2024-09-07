@@ -26,11 +26,14 @@ final class RsyncProcessNOFilehandler {
     let rsyncver3 = "/opt/homebrew/bin/rsync"
     let rsyncver2 = "/usr/bin/rsync"
 
-    func executeProcess() {
+    func executeProcess(_ ver3: Bool) {
         // Process
         let task = Process()
-        // Getting version of rsync
-        task.launchPath = ""
+        if ver3 {
+            task.launchPath = rsyncver3
+        } else {
+            task.launchPath = rsyncver2
+        }
         // Pipe for reading output from Process
         let pipe = Pipe()
         task.standardOutput = pipe
@@ -74,5 +77,3 @@ final class RsyncProcessNOFilehandler {
         outputprocess = OutputfromProcess()
     }
 }
-
-// swiftlint:enable function_body_length cyclomatic_complexity line_length
