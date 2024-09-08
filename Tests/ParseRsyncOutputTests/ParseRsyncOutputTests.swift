@@ -13,36 +13,36 @@ import Foundation
     func processtermination(outputfromrsync: [String]) {
         
         let trimmedoutputfromrsync = TrimOutputFromRsync(outputfromrsync).trimmeddata
-        parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync,rsyncver3)
-        let result = stats()
+        let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync,rsyncver3)
+        let result = stats(parsersyncoutput: parsersyncoutput)
         print(result)
-        
+        print(trimmedoutputfromrsync)
     }
     
     @Test func executetest() {
         
-        let arguments = Arguments().nr4
+        let arguments = Arguments().arguments
         let process = RsyncProcess(arguments: arguments,
                                                 processtermination: processtermination)
         process.executeProcess(rsyncver3)
     }
     
-    func stats() -> String {
-        let numberOfFiles = String(parsersyncoutput?.transferNum ?? 0)
-        let sizeOfFiles = String(parsersyncoutput?.transferNumSize ?? 0)
+    func stats(parsersyncoutput: ParseRsyncOutput) -> String {
+        let numberOfFiles = String(parsersyncoutput.transferNum ?? 0)
+        let sizeOfFiles = String(parsersyncoutput.transferNumSize ?? 0)
         var numbers: String?
         var parts: [String]?
-        guard parsersyncoutput?.resultRsync != nil else {
+        guard parsersyncoutput.resultRsync != nil else {
             let size = numberOfFiles + " files :" + sizeOfFiles + " KB" + " in just a few seconds"
             return size
         }
-        if rsyncver3, let resultRsync = parsersyncoutput?.resultRsync {
+        if rsyncver3, let resultRsync = parsersyncoutput.resultRsync {
             // ["sent", "409687", "bytes", "", "received", "5331", "bytes", "", "830036.00", "bytes/sec"]
             let newmessage = resultRsync.replacingOccurrences(of: ",", with: "")
             parts = newmessage.components(separatedBy: " ")
         } else {
             // ["sent", "262826", "bytes", "", "received", "2248", "bytes", "", "58905.33", "bytes/sec"]
-            if let resultRsync = parsersyncoutput?.resultRsync {
+            if let resultRsync = parsersyncoutput.resultRsync {
                 parts = resultRsync.components(separatedBy: " ")
             }
         }
@@ -69,6 +69,15 @@ import Foundation
             bytesTotal = bytesTotalreceived
         }
         numbers = formatresult(numberOfFiles: numberOfFiles, bytesTotal: bytesTotal, seconds: seconds)
+        
+        print(numberOfFiles)
+        print(sizeOfFiles)
+        print(bytesTotalsent)
+        print(bytesTotalreceived)
+        print(bytesTotal)
+        print(bytesSec)
+        print(seconds)
+        
         return numbers ?? ""
     }
 
