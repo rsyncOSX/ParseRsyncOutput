@@ -21,8 +21,8 @@ import Foundation
     
     @Test func executetest() {
         
-        let arguments = Arguments().nr1
-        let process = RsyncProcessNOFilehandler(arguments: arguments,
+        let arguments = Arguments().nr4
+        let process = RsyncProcess(arguments: arguments,
                                                 processtermination: processtermination)
         process.executeProcess(rsyncver3)
     }

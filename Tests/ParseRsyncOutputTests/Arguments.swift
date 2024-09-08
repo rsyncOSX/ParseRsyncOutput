@@ -81,7 +81,7 @@ struct Arguments{
                "--dry-run",
                "--stats",
                "/Users/thomas/Documents/",
-               "/Volumes/WesternDigitalBackup/backup/Documents/"]
+               "/Users/thomas/tmp/"]
 
     // The full rsync command is, macOS Silicon with rsync from Homebrew:
     // /opt/homebrew/bin/rsync --archive --verbose --compress --delete -e  "ssh -i ~/.ssh_rsyncosx/rsyncosx -p 22"  --dry-run --stats  thomas@raspberrypi:/home/thomas/Downloads/ /Users/thomas/Downloads/
