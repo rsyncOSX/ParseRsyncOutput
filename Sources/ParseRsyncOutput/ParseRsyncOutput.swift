@@ -148,7 +148,7 @@ public final class ParseRsyncOutput {
         count = output.count
 
         // Getting the summarized output from output.
-        if output.count > 3 { resultRsync = output[output.count - 3] }
+        if output.count > 3 { resultRsync = output[output.count - 2] }
         let files = output.filter { $0.contains("files transferred:") }
         // ver 3.x - [Number of regular files transferred: 24]
         // ver 2.x - [Number of files transferred: 24]
