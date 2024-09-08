@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  RsyncProcess.swift
 //  ParseRsyncOutput
 //
 //  Created by Thomas Evensen on 07/09/2024.
@@ -9,11 +9,10 @@ import Foundation
 
 @MainActor
 final class RsyncProcess {
-    
     var arguments: [String]?
     var processtermination: ([String]) -> Void
     var outputprocess: OutputfromProcess?
-    
+
     let rsyncver3 = "/opt/homebrew/bin/rsync"
     let rsyncver2 = "/usr/bin/rsync"
 
@@ -30,13 +29,13 @@ final class RsyncProcess {
         let pipe = Pipe()
         task.standardOutput = pipe
         task.standardError = pipe
-        
+
         do {
             try task.run()
-        } catch  {
+        } catch {
             return
         }
-        
+
         let outputData = pipe.fileHandleForReading.readDataToEndOfFile()
         let output = String(decoding: outputData, as: UTF8.self)
         let strArray = output.components(separatedBy: "\n")
@@ -44,8 +43,7 @@ final class RsyncProcess {
     }
 
     init(arguments: [String]?,
-         processtermination: @escaping ([String]) -> Void)
-    {
+         processtermination: @escaping ([String]) -> Void) {
         self.arguments = arguments
         self.processtermination = processtermination
         outputprocess = OutputfromProcess()

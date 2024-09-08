@@ -1,32 +1,28 @@
 @testable import ParseRsyncOutput
 
-import Testing
 import Foundation
+import Testing
 
 @MainActor
 @Suite final class TestParseRsyncOutput {
-    
     let rsyncver3: Bool = true
     var parsersyncoutput: ParseRsyncOutput?
-    
-    
+
     func processtermination(outputfromrsync: [String]) {
-        
         let trimmedoutputfromrsync = TrimOutputFromRsync(outputfromrsync).trimmeddata
-        let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync,rsyncver3)
+        let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, rsyncver3)
         let result = stats(parsersyncoutput: parsersyncoutput)
         print(result)
         print(trimmedoutputfromrsync)
     }
-    
+
     @Test func executetest() {
-        
         let arguments = Arguments().arguments
         let process = RsyncProcess(arguments: arguments,
-                                                processtermination: processtermination)
+                                   processtermination: processtermination)
         process.executeProcess(rsyncver3)
     }
-    
+
     func stats(parsersyncoutput: ParseRsyncOutput) -> String {
         let numberOfFiles = String(parsersyncoutput.transferNum ?? 0)
         let sizeOfFiles = String(parsersyncoutput.transferNumSize ?? 0)
@@ -69,7 +65,7 @@ import Foundation
             bytesTotal = bytesTotalreceived
         }
         numbers = formatresult(numberOfFiles: numberOfFiles, bytesTotal: bytesTotal, seconds: seconds)
-        
+
         print(numberOfFiles)
         print(sizeOfFiles)
         print(bytesTotalsent)
@@ -77,7 +73,7 @@ import Foundation
         print(bytesTotal)
         print(bytesSec)
         print(seconds)
-        
+
         return numbers ?? ""
     }
 
@@ -93,5 +89,4 @@ import Foundation
                 " MB in " + String(format: "%.2f", seconds) + " seconds"
         }
     }
-    
 }

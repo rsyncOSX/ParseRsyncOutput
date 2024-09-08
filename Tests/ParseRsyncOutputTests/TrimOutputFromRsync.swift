@@ -60,4 +60,3 @@ final class TrimOutputFromRsync {
             .store(in: &subscriptions)
     }
 }
-
