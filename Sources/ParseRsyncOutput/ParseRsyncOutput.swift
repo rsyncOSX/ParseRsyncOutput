@@ -118,7 +118,6 @@ public final class ParseRsyncOutput {
     }
 
     public func stats(_ version3ofrsync: Bool, stringnumbersonly: StringNumbersOnly, numbersonly: NumbersOnly) -> String {
-        let numberOfFiles = String(numbersonly.transferNum)
         var parts: [String]?
         if version3ofrsync {
             // ["sent", "409687", "bytes", "", "received", "5331", "bytes", "", "830036.00", "bytes/sec"]
@@ -134,40 +133,22 @@ public final class ParseRsyncOutput {
         guard (parts?.count ?? 0) > 9 else { return "0" }
         // Sent and received
         let bytesTotalsent = Double(parts?[1] ?? "0") ?? 0
-        let bytesTotalreceived = Double(parts?[5] ?? "0") ?? 0
-        if bytesTotalsent > bytesTotalreceived {
-            // backup task
-            // let result = resultsent! + parts![8] + " b/sec"
-            bytesSec = Double(parts?[8] ?? "0") ?? 0
-            seconds = bytesTotalsent / bytesSec
-            bytesTotal = bytesTotalsent
-        } else {
-            // restore task
-            // let result = resultreceived! + parts![8] + " b/sec"
-            bytesSec = Double(parts?[8] ?? "0") ?? 0
-            seconds = bytesTotalreceived / bytesSec
-            bytesTotal = bytesTotalreceived
-        }
-        if numberOfFiles == "0" {
-            return String(count ?? 0) + " files : " +
-                String(format: "%.2f", (bytesTotal / 1000) / 1000) +
-                " MB in " + String(format: "%.2f", seconds) + " seconds"
-        } else {
-            return numberOfFiles + " files : " +
-                String(format: "%.2f", (bytesTotal / 1000) / 1000) +
-                " MB in " + String(format: "%.2f", seconds) + " seconds"
-        }
+        bytesSec = Double(parts?[8] ?? "0") ?? 0
+        seconds = bytesTotalsent / bytesSec
+        bytesTotal = bytesTotalsent
+        return String(numbersonly.transferNum) + " files : " +
+            String(format: "%.2f", (bytesTotal / 1000) / 1000) +
+            " MB in " + String(format: "%.2f", seconds) + " seconds"
     }
 
     // Input is TrimOutputFromRsync(myoutput).trimmeddata
     public init(_ output: [String], _ version3ofrsync: Bool) {
         var resultRsync = ""
         guard output.count > 0 else { return }
-
         count = output.count
 
         // Getting the summarized output from output.
-        if output.count > 2 { resultRsync = output[output.count - 2] }
+        if output.count > 3 { resultRsync = output[output.count - 3] }
         let files = output.filter { $0.contains("files transferred:") }
         // ver 3.x - [Number of regular files transferred: 24]
         // ver 2.x - [Number of files transferred: 24]
