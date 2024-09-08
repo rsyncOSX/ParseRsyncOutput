@@ -41,6 +41,7 @@ public struct Result {
 public final class ParseRsyncOutput {
     public var result: Result?
     public var result2: Result2?
+    public var count: Int?
 
     public func rsyncver3(result: Result) {
         var totNum: Int?
@@ -109,10 +110,64 @@ public final class ParseRsyncOutput {
         result2 = Result2(totNum: totNum ?? 0, totDir: 0, totNumSize: totNumSize ?? 0, transferNum: transferNum ?? 0, transferNumSize: transferNumSize ?? 0, newfiles: 0, deletefiles: 0)
     }
 
+    
+    public func stats(_ version3ofrsync: Bool, result: Result, result2: Result2) -> String {
+        let numberOfFiles = String(result2.transferNum)
+        let sizeOfFiles = String(result2.transferNumSize)
+        var numbers: String?
+        var parts: [String]?
+        if version3ofrsync {
+            // ["sent", "409687", "bytes", "", "received", "5331", "bytes", "", "830036.00", "bytes/sec"]
+            let newmessage = result.resultRsync.replacingOccurrences(of: ",", with: "")
+            parts = newmessage.components(separatedBy: " ")
+        } else {
+            // ["sent", "262826", "bytes", "", "received", "2248", "bytes", "", "58905.33", "bytes/sec"]
+            parts = result.resultRsync.components(separatedBy: " ")
+        }
+        var bytesTotal: Double = 0
+        var bytesSec: Double = 0
+        var seconds: Double = 0
+        guard (parts?.count ?? 0) > 9 else { return "0" }
+        // Sent and received
+        let bytesTotalsent = Double(parts?[1] ?? "0") ?? 0
+        let bytesTotalreceived = Double(parts?[5] ?? "0") ?? 0
+        if bytesTotalsent > bytesTotalreceived {
+            // backup task
+            // let result = resultsent! + parts![8] + " b/sec"
+            bytesSec = Double(parts?[8] ?? "0") ?? 0
+            seconds = bytesTotalsent / bytesSec
+            bytesTotal = bytesTotalsent
+        } else {
+            // restore task
+            // let result = resultreceived! + parts![8] + " b/sec"
+            bytesSec = Double(parts?[8] ?? "0") ?? 0
+            seconds = bytesTotalreceived / bytesSec
+            bytesTotal = bytesTotalreceived
+        }
+        numbers = formatresult(numberOfFiles: numberOfFiles, bytesTotal: bytesTotal, seconds: seconds)
+        return numbers ?? ""
+    }
+    
+    public func formatresult(numberOfFiles: String?, bytesTotal: Double, seconds: Double) -> String {
+        // Dont have numbers of file as input
+        if numberOfFiles == nil {
+            String(count ?? 0) + " files : " +
+                String(format: "%.2f", (bytesTotal / 1000) / 1000) +
+                " MB in " + String(format: "%.2f", seconds) + " seconds"
+        } else {
+            numberOfFiles! + " files : " +
+                String(format: "%.2f", (bytesTotal / 1000) / 1000) +
+                " MB in " + String(format: "%.2f", seconds) + " seconds"
+        }
+    }
+
     // Input is TrimOutputFromRsync(myoutput).trimmeddata
     public init(_ output: [String], _ version3ofrsync: Bool) {
         var resultRsync = ""
         guard output.count > 0 else { return }
+        
+        count = output.count
+        
         // Getting the summarized output from output.
         if output.count > 2 { resultRsync = output[output.count - 2] }
         let files = output.filter { $0.contains("files transferred:") }
@@ -147,6 +202,7 @@ public final class ParseRsyncOutput {
             }
         }
     }
+    
 }
 
 // swiftlint:enable cyclomatic_complexity
