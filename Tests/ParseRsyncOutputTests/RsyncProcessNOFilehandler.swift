@@ -5,12 +5,8 @@
 //  Created by Thomas Evensen on 07/09/2024.
 //
 
-import Foundation
-import Combine
-
 import Combine
 import Foundation
-import OSLog
 
 @MainActor
 final class RsyncProcessNOFilehandler {
@@ -34,6 +30,7 @@ final class RsyncProcessNOFilehandler {
         } else {
             task.launchPath = rsyncver2
         }
+        task.arguments = arguments
         // Pipe for reading output from Process
         let pipe = Pipe()
         task.standardOutput = pipe
@@ -48,6 +45,7 @@ final class RsyncProcessNOFilehandler {
                 if data.count > 0 {
                     if let str = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
                         self.outputprocess?.addlinefromoutput(str: str as String)
+                        print(str)
                     }
                     outHandle.waitForDataInBackgroundAndNotify()
                 }
@@ -59,6 +57,7 @@ final class RsyncProcessNOFilehandler {
             .sink { _ in
                 // Process termination and Log to file
                 self.processtermination(self.outputprocess?.getOutput() ?? [""])
+        
                 // Release Combine subscribers
                 self.subscriptons.removeAll()
             }.store(in: &subscriptons)
