@@ -1,0 +1,5 @@
+
+❯ /opt/homebrew/bin/rsync --archive --verbose --compress --delete -e  "ssh -i ~/.ssh_rsyncosx/rsyncosx -p 22"  --exclude-from=/Users/thomas/Documents/excludersync/ex
+clude-list-github.txt --dry-run --stats /Users/thomas/GitHub/RsyncUI/ thomas@raspberrypi:/home/thomas/Dokumenter/ >> tmp/ver3.txt
+
+/usr/bin/rsync --archive --verbose --compress --delete -e  "ssh -i ~/.ssh_rsyncosx/rsyncosx -p 22"  --exclude-from=/Users/thomas/Documents/excludersync/exclude-list-github.txt --dry-run --stats /Users/thomas/GitHub/RsyncUI/ thomas@raspberrypi:/home/thomas/Dokumenter/ >> tmp/ver2.txt
