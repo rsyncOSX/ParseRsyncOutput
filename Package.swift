@@ -10,7 +10,7 @@ let package = Package(
         .library(
             name: "ParseRsyncOutput",
             targets: ["ParseRsyncOutput"]
-        )
+        ),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -20,6 +20,6 @@ let package = Package(
         .testTarget(
             name: "ParseRsyncOutputTests",
             dependencies: ["ParseRsyncOutput"]
-        )
+        ),
     ]
 )

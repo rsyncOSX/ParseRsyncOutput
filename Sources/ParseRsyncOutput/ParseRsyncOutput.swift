@@ -4,7 +4,7 @@
 import Foundation
 
 @MainActor
-public struct Result2 {
+public struct NumbersOnly {
     public var totNum: Int
     public var totDir: Int
     public var totNumSize: Double
@@ -15,7 +15,7 @@ public struct Result2 {
 }
 
 @MainActor
-public struct Result {
+public struct StringNumbersOnly {
     // Second last String in Array rsync output of how much in what time
     public var resultRsync: String
     // Temporary numbers
@@ -39,12 +39,12 @@ public struct Result {
 
 @MainActor
 public final class ParseRsyncOutput {
-    public var result: Result?
-    public var result2: Result2?
+    public var stringnumbersonly: StringNumbersOnly?
+    public var numbersonly: NumbersOnly?
     public var count: Int?
     public var stats: String?
 
-    public func rsyncver3(result: Result) {
+    public func rsyncver3(stringnumbersonly: StringNumbersOnly) {
         var totNum: Int?
         var totDir: Int?
         var totNumSize: Double?
@@ -53,19 +53,19 @@ public final class ParseRsyncOutput {
         var newfiles: Int?
         var deletefiles: Int?
 
-        guard result.files.count > 0 else { return }
-        guard result.filesSize.count > 0 else { return }
-        guard result.totfilesNum.count > 0 else { return }
-        guard result.totfileSize.count > 0 else { return }
-        guard result.new.count > 0 else { return }
-        guard result.delete.count > 0 else { return }
+        guard stringnumbersonly.files.count > 0 else { return }
+        guard stringnumbersonly.filesSize.count > 0 else { return }
+        guard stringnumbersonly.totfilesNum.count > 0 else { return }
+        guard stringnumbersonly.totfileSize.count > 0 else { return }
+        guard stringnumbersonly.new.count > 0 else { return }
+        guard stringnumbersonly.delete.count > 0 else { return }
         // Ver3 of rsync adds "," as 1000 mark, must replace it and then split numbers into components
-        let filesPart = result.files[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let filesPartSize = result.filesSize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let totfilesPart = result.totfilesNum[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let totfilesPartSize = result.totfileSize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let newPart = result.new[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let deletePart = result.delete[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let filesPart = stringnumbersonly.files[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let filesPartSize = stringnumbersonly.filesSize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let totfilesPart = stringnumbersonly.totfilesNum[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let totfilesPartSize = stringnumbersonly.totfileSize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let newPart = stringnumbersonly.new[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let deletePart = stringnumbersonly.delete[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
         // ["Number", "of", "regular", "files", "transferred:", "24"]
         // ["Total", "transferred", "file", "size:", "281653", "bytes"]
         // ["Number", "of", "files:", "3956", "(reg:", "3197", "dir:", "758", "link:", "1)"]
@@ -83,26 +83,26 @@ public final class ParseRsyncOutput {
         }
         if newPart.count > 4 { newfiles = Int(newPart[4]) } else { newfiles = 0 }
         if deletePart.count > 4 { deletefiles = Int(deletePart[4]) } else { deletefiles = 0 }
-        result2 = Result2(totNum: totNum ?? 0, totDir: totDir ?? 0, totNumSize: totNumSize ?? 0, transferNum: transferNum ?? 0, transferNumSize: transferNumSize ?? 0, newfiles: newfiles ?? 0, deletefiles: deletefiles ?? 0)
-        if let result2 {
-            stats = stats(true, result: result, result2: result2)
+        numbersonly = NumbersOnly(totNum: totNum ?? 0, totDir: totDir ?? 0, totNumSize: totNumSize ?? 0, transferNum: transferNum ?? 0, transferNumSize: transferNumSize ?? 0, newfiles: newfiles ?? 0, deletefiles: deletefiles ?? 0)
+        if let numbersonly {
+            stats = stats(true, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
         }
     }
 
-    public func rsyncver2(result: Result) {
+    public func rsyncver2(stringnumbersonly: StringNumbersOnly) {
         var totNum: Int?
         var totNumSize: Double?
         var transferNum: Int?
         var transferNumSize: Double?
 
-        guard result.files.count > 0 else { return }
-        guard result.filesSize.count > 0 else { return }
-        guard result.totfilesNum.count > 0 else { return }
-        guard result.totfileSize.count > 0 else { return }
-        let filesPart = result.files[0].components(separatedBy: " ")
-        let filesPartSize = result.filesSize[0].components(separatedBy: " ")
-        let totfilesPart = result.totfilesNum[0].components(separatedBy: " ")
-        let totfilesPartSize = result.totfileSize[0].components(separatedBy: " ")
+        guard stringnumbersonly.files.count > 0 else { return }
+        guard stringnumbersonly.filesSize.count > 0 else { return }
+        guard stringnumbersonly.totfilesNum.count > 0 else { return }
+        guard stringnumbersonly.totfileSize.count > 0 else { return }
+        let filesPart = stringnumbersonly.files[0].components(separatedBy: " ")
+        let filesPartSize = stringnumbersonly.filesSize[0].components(separatedBy: " ")
+        let totfilesPart = stringnumbersonly.totfilesNum[0].components(separatedBy: " ")
+        let totfilesPartSize = stringnumbersonly.totfileSize[0].components(separatedBy: " ")
         // ["Number", "of", "files", "transferred:", "24"]
         // ["Total", "transferred", "file", "size:", "281579", "bytes"]
         // ["Number", "of", "files:", "3956"]
@@ -111,24 +111,22 @@ public final class ParseRsyncOutput {
         if filesPartSize.count > 4 { transferNumSize = Double(filesPartSize[4]) } else { transferNumSize = 0 }
         if totfilesPart.count > 3 { totNum = Int(totfilesPart[3]) } else { totNum = 0 }
         if totfilesPartSize.count > 3 { totNumSize = Double(totfilesPartSize[3]) } else { totNumSize = 0 }
-        result2 = Result2(totNum: totNum ?? 0, totDir: 0, totNumSize: totNumSize ?? 0, transferNum: transferNum ?? 0, transferNumSize: transferNumSize ?? 0, newfiles: 0, deletefiles: 0)
-        if let result2 {
-            stats = stats(false, result: result, result2: result2)
+        numbersonly = NumbersOnly(totNum: totNum ?? 0, totDir: 0, totNumSize: totNumSize ?? 0, transferNum: transferNum ?? 0, transferNumSize: transferNumSize ?? 0, newfiles: 0, deletefiles: 0)
+        if let numbersonly {
+            stats = stats(false, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
         }
     }
 
-    
-    public func stats(_ version3ofrsync: Bool, result: Result, result2: Result2) -> String {
-        let numberOfFiles = String(result2.transferNum)
-        var numbers: String?
+    public func stats(_ version3ofrsync: Bool, stringnumbersonly: StringNumbersOnly, numbersonly: NumbersOnly) -> String {
+        let numberOfFiles = String(numbersonly.transferNum)
         var parts: [String]?
         if version3ofrsync {
             // ["sent", "409687", "bytes", "", "received", "5331", "bytes", "", "830036.00", "bytes/sec"]
-            let newmessage = result.resultRsync.replacingOccurrences(of: ",", with: "")
+            let newmessage = stringnumbersonly.resultRsync.replacingOccurrences(of: ",", with: "")
             parts = newmessage.components(separatedBy: " ")
         } else {
             // ["sent", "262826", "bytes", "", "received", "2248", "bytes", "", "58905.33", "bytes/sec"]
-            parts = result.resultRsync.components(separatedBy: " ")
+            parts = stringnumbersonly.resultRsync.components(separatedBy: " ")
         }
         var bytesTotal: Double = 0
         var bytesSec: Double = 0
@@ -150,18 +148,12 @@ public final class ParseRsyncOutput {
             seconds = bytesTotalreceived / bytesSec
             bytesTotal = bytesTotalreceived
         }
-        numbers = formatresult(numberOfFiles: numberOfFiles, bytesTotal: bytesTotal, seconds: seconds)
-        return numbers ?? ""
-    }
-    
-    public func formatresult(numberOfFiles: String?, bytesTotal: Double, seconds: Double) -> String {
-        // Dont have numbers of file as input
-        if numberOfFiles == nil {
-            String(count ?? 0) + " files : " +
+        if numberOfFiles == "0" {
+            return String(count ?? 0) + " files : " +
                 String(format: "%.2f", (bytesTotal / 1000) / 1000) +
                 " MB in " + String(format: "%.2f", seconds) + " seconds"
         } else {
-            numberOfFiles! + " files : " +
+            return numberOfFiles + " files : " +
                 String(format: "%.2f", (bytesTotal / 1000) / 1000) +
                 " MB in " + String(format: "%.2f", seconds) + " seconds"
         }
@@ -171,9 +163,9 @@ public final class ParseRsyncOutput {
     public init(_ output: [String], _ version3ofrsync: Bool) {
         var resultRsync = ""
         guard output.count > 0 else { return }
-        
+
         count = output.count
-        
+
         // Getting the summarized output from output.
         if output.count > 2 { resultRsync = output[output.count - 2] }
         let files = output.filter { $0.contains("files transferred:") }
@@ -193,22 +185,21 @@ public final class ParseRsyncOutput {
         // Delete files
         let delete = output.filter { $0.contains("Number of deleted files:") }
 
-        result = Result(resultRsync: resultRsync,
-                        files: files,
-                        filesSize: filesSize,
-                        totfileSize: totfileSize,
-                        totfilesNum: totfilesNum,
-                        new: new,
-                        delete: delete)
+        stringnumbersonly = StringNumbersOnly(resultRsync: resultRsync,
+                                              files: files,
+                                              filesSize: filesSize,
+                                              totfileSize: totfileSize,
+                                              totfilesNum: totfilesNum,
+                                              new: new,
+                                              delete: delete)
         if files.count == 1, filesSize.count == 1, totfileSize.count == 1, totfilesNum.count == 1 {
-            if version3ofrsync, let result {
-                rsyncver3(result: result)
-            } else if let result {
-                rsyncver2(result: result)
+            if version3ofrsync, let stringnumbersonly {
+                rsyncver3(stringnumbersonly: stringnumbersonly)
+            } else if let stringnumbersonly {
+                rsyncver2(stringnumbersonly: stringnumbersonly)
             }
         }
     }
-    
 }
 
 // swiftlint:enable cyclomatic_complexity

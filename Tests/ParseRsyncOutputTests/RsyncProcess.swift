@@ -43,7 +43,8 @@ final class RsyncProcess {
     }
 
     init(arguments: [String]?,
-         processtermination: @escaping ([String]) -> Void) {
+         processtermination: @escaping ([String]) -> Void)
+    {
         self.arguments = arguments
         self.processtermination = processtermination
         outputprocess = OutputfromProcess()
