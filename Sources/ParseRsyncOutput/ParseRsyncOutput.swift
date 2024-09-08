@@ -143,12 +143,17 @@ public final class ParseRsyncOutput {
 
     // Input is TrimOutputFromRsync(myoutput).trimmeddata
     public init(_ output: [String], _ version3ofrsync: Bool) {
-        var resultRsync = ""
         guard output.count > 0 else { return }
         count = output.count
+        var result = ""
 
         // Getting the summarized output from output.
-        if output.count > 3 { resultRsync = output[output.count - 2] }
+        let resultRsync = output.filter { $0.contains("sent") && $0.contains("received") && $0.contains("bytes/sec") }
+        if resultRsync.count == 1 {
+            result = resultRsync[0]
+        } else {
+            result = "Could not set total"
+        }
         let files = output.filter { $0.contains("files transferred:") }
         // ver 3.x - [Number of regular files transferred: 24]
         // ver 2.x - [Number of files transferred: 24]
@@ -165,8 +170,8 @@ public final class ParseRsyncOutput {
         let new = output.filter { $0.contains("Number of created files:") }
         // Delete files
         let delete = output.filter { $0.contains("Number of deleted files:") }
-
-        stringnumbersonly = StringNumbersOnly(resultRsync: resultRsync,
+        
+        stringnumbersonly = StringNumbersOnly(resultRsync: result,
                                               files: files,
                                               filesSize: filesSize,
                                               totfileSize: totfileSize,
