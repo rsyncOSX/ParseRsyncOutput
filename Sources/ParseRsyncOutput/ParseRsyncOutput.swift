@@ -42,6 +42,7 @@ public final class ParseRsyncOutput {
     public var result: Result?
     public var result2: Result2?
     public var count: Int?
+    public var stats: String?
 
     public func rsyncver3(result: Result) {
         var totNum: Int?
@@ -83,6 +84,9 @@ public final class ParseRsyncOutput {
         if newPart.count > 4 { newfiles = Int(newPart[4]) } else { newfiles = 0 }
         if deletePart.count > 4 { deletefiles = Int(deletePart[4]) } else { deletefiles = 0 }
         result2 = Result2(totNum: totNum ?? 0, totDir: totDir ?? 0, totNumSize: totNumSize ?? 0, transferNum: transferNum ?? 0, transferNumSize: transferNumSize ?? 0, newfiles: newfiles ?? 0, deletefiles: deletefiles ?? 0)
+        if let result2 {
+            stats = stats(true, result: result, result2: result2)
+        }
     }
 
     public func rsyncver2(result: Result) {
@@ -108,12 +112,14 @@ public final class ParseRsyncOutput {
         if totfilesPart.count > 3 { totNum = Int(totfilesPart[3]) } else { totNum = 0 }
         if totfilesPartSize.count > 3 { totNumSize = Double(totfilesPartSize[3]) } else { totNumSize = 0 }
         result2 = Result2(totNum: totNum ?? 0, totDir: 0, totNumSize: totNumSize ?? 0, transferNum: transferNum ?? 0, transferNumSize: transferNumSize ?? 0, newfiles: 0, deletefiles: 0)
+        if let result2 {
+            stats = stats(false, result: result, result2: result2)
+        }
     }
 
     
     public func stats(_ version3ofrsync: Bool, result: Result, result2: Result2) -> String {
         let numberOfFiles = String(result2.transferNum)
-        let sizeOfFiles = String(result2.transferNumSize)
         var numbers: String?
         var parts: [String]?
         if version3ofrsync {
