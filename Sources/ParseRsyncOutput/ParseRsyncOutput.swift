@@ -134,11 +134,9 @@ public final class ParseRsyncOutput {
                       numbersonly: NumbersOnly) -> String {
         var parts: [String]?
         if version3ofrsync {
-            // ["sent", "409687", "bytes", "", "received", "5331", "bytes", "", "830036.00", "bytes/sec"]
             let newmessage = stringnumbersonly.result.replacingOccurrences(of: ",", with: "")
             parts = newmessage.components(separatedBy: " ")
         } else {
-            // ["sent", "262826", "bytes", "", "received", "2248", "bytes", "", "58905.33", "bytes/sec"]
             parts = stringnumbersonly.result.components(separatedBy: " ")
         }
         var bytesTotal: Double = 0
