@@ -20,7 +20,7 @@ final class TrimOutput {
                 switch completion {
                 case .finished:
                     return
-                case .failure(_):
+                case .failure:
                     return
                 }
             }, receiveValue: { [unowned self] line in

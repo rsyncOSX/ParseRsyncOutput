@@ -42,7 +42,7 @@ public final class ParseRsyncOutput {
     public var numbersonly: NumbersOnly?
     public var count: Int?
     public var stats: String?
-    
+
     public var formatted_transferredNumber: String {
         NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.transferNum ?? 0), number: NumberFormatter.Style.none)
     }
@@ -175,17 +175,15 @@ public final class ParseRsyncOutput {
             " MB in " + String(format: "%.2f", seconds) + " seconds"
     }
 
-    // Input is TrimOutputFromRsync(myoutput).trimmeddata
     @available(macOS 10.15, *)
     public init(_ output: [String], _ version3ofrsync: Bool) {
         let trimmedoutput = TrimOutput(output).trimmeddata
         guard trimmedoutput.count > 0 else { return }
-        
+
         var suboutput: [String]?
         count = trimmedoutput.count
         var result = ""
-        // Delete most of lines and keep onkly the last 20 lines of array.
-        // That is where the summarized data stay.
+        // Delete most of lines and keep only the last 20 lines of array, that is where the summarized data stay.
         if (count ?? 0) >= 20 {
             let firstindex = (count ?? 0) - 20
             let lastindex = (count ?? 0)
