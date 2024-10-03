@@ -176,19 +176,22 @@ public final class ParseRsyncOutput {
     }
 
     // Input is TrimOutputFromRsync(myoutput).trimmeddata
+    @available(macOS 10.15, *)
     public init(_ output: [String], _ version3ofrsync: Bool) {
-        guard output.count > 0 else { return }
+        let trimmedoutput = TrimOutput(output).trimmeddata
+        guard trimmedoutput.count > 0 else { return }
+        
         var suboutput: [String]?
-        count = output.count
+        count = trimmedoutput.count
         var result = ""
         // Delete most of lines and keep onkly the last 20 lines of array.
         // That is where the summarized data stay.
         if (count ?? 0) >= 20 {
             let firstindex = (count ?? 0) - 20
             let lastindex = (count ?? 0)
-            suboutput = Array(output[firstindex ..< lastindex])
+            suboutput = Array(trimmedoutput[firstindex ..< lastindex])
         } else {
-            suboutput = output
+            suboutput = trimmedoutput
         }
         if let suboutput {
         // Getting the summarized output from suboutput.
