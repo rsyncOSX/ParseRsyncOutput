@@ -18,7 +18,6 @@ public struct NumbersOnly {
 public struct StringNumbersOnly {
     // Second last String in Array rsync output of how much in what time
     public var result: String
-    // Temporary numbers
     // ver 3.x - [Number of regular files transferred: 24]
     // ver 2.x - [Number of files transferred: 24]
     public var files: [String]
@@ -43,6 +42,28 @@ public final class ParseRsyncOutput {
     public var numbersonly: NumbersOnly?
     public var count: Int?
     public var stats: String?
+    
+    var formatted_transferredNumber: String {
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.transferNum ?? 0), number: NumberFormatter.Style.none)
+    }
+    var formatted_totalNumber: String {
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totNum ?? 0), number: NumberFormatter.Style.decimal)
+    }
+    var formatted_totalNumberSizebytes: String {
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totNumSize ?? 0), number: NumberFormatter.Style.decimal)
+    }
+    var formatted_totalDirs: String {
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totDir ?? 0), number: NumberFormatter.Style.decimal)
+    }
+    var formatted_totalNumber_totalDirs: String {
+        NumberFormatter.localizedString(from: NSNumber(value: (numbersonly?.totDir ?? 0) + (numbersonly?.totNum ?? 0)), number: NumberFormatter.Style.decimal)
+    }
+    var formatted_newfiles: String {
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.newfiles ?? 0), number: NumberFormatter.Style.none)
+    }
+    var formatted_deletefiles: String {
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.deletefiles ?? 0), number: NumberFormatter.Style.none)
+    }
 
     public func rsyncver3(stringnumbersonly: StringNumbersOnly) {
         var totNum: Int?

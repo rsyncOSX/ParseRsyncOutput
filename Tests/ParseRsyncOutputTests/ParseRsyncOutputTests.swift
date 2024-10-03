@@ -60,7 +60,7 @@ import Testing
         }
         return nil
     }
-    
+
     func readopenrsyncfile() -> [String]? {
         if let homepath = userHomeDirectoryURLPath {
             let ver2 = "GitHub/ParseRsyncOutput/TestData/openrsync.txt"
@@ -90,23 +90,23 @@ import Testing
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, true)
             print("stats: ", parsersyncoutput.stats ?? "")
             #expect(parsersyncoutput.stats == "6846 files : 0.39 MB in 0.47 seconds")
-           
+
             print("transferNumSize: ", parsersyncoutput.numbersonly?.transferNumSize ?? "")
             #expect(parsersyncoutput.numbersonly?.transferNumSize == 24788299.0)
 
-            print("deletefiles: ",parsersyncoutput.numbersonly?.deletefiles ?? "")
+            print("deletefiles: ", parsersyncoutput.numbersonly?.deletefiles ?? "")
             #expect(parsersyncoutput.numbersonly?.deletefiles == 0)
-           
-            print("newfiles: ",parsersyncoutput.numbersonly?.newfiles ?? "")
+
+            print("newfiles: ", parsersyncoutput.numbersonly?.newfiles ?? "")
             #expect(parsersyncoutput.numbersonly?.newfiles == 7191)
-            
-            print("totDir: ",parsersyncoutput.numbersonly?.totDir ?? "")
+
+            print("totDir: ", parsersyncoutput.numbersonly?.totDir ?? "")
             #expect(parsersyncoutput.numbersonly?.totDir == 346)
-            
-            print("totNum: ",parsersyncoutput.numbersonly?.totNum ?? "")
+
+            print("totNum: ", parsersyncoutput.numbersonly?.totNum ?? "")
             #expect(parsersyncoutput.numbersonly?.totNum == 6846)
-            
-            print("totNumSize: ",parsersyncoutput.numbersonly?.totNumSize ?? "")
+
+            print("totNumSize: ", parsersyncoutput.numbersonly?.totNumSize ?? "")
             #expect(parsersyncoutput.numbersonly?.totNumSize == 24788299.0)
         }
     }
@@ -118,27 +118,27 @@ import Testing
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, false)
             print("stats: ", parsersyncoutput.stats ?? "")
             #expect(parsersyncoutput.stats == "6846 files : 0.38 MB in 2.25 seconds")
-           
+
             print("transferNumSize: ", parsersyncoutput.numbersonly?.transferNumSize ?? "")
             #expect(parsersyncoutput.numbersonly?.transferNumSize == 24788299.0)
 
-            print("deletefiles: ",parsersyncoutput.numbersonly?.deletefiles ?? "")
+            print("deletefiles: ", parsersyncoutput.numbersonly?.deletefiles ?? "")
             #expect(parsersyncoutput.numbersonly?.deletefiles == 0)
-           
-            print("newfiles: ",parsersyncoutput.numbersonly?.newfiles ?? "")
+
+            print("newfiles: ", parsersyncoutput.numbersonly?.newfiles ?? "")
             #expect(parsersyncoutput.numbersonly?.newfiles == 0)
-            
-            print("totDir: ",parsersyncoutput.numbersonly?.totDir ?? "")
+
+            print("totDir: ", parsersyncoutput.numbersonly?.totDir ?? "")
             #expect(parsersyncoutput.numbersonly?.totDir == 0)
-            
-            print("totNum: ",parsersyncoutput.numbersonly?.totNum ?? "")
+
+            print("totNum: ", parsersyncoutput.numbersonly?.totNum ?? "")
             #expect(parsersyncoutput.numbersonly?.totNum == 7192)
-            
-            print("totNumSize: ",parsersyncoutput.numbersonly?.totNumSize ?? "")
+
+            print("totNumSize: ", parsersyncoutput.numbersonly?.totNumSize ?? "")
             #expect(parsersyncoutput.numbersonly?.totNumSize == 24788299.0)
         }
     }
-    
+
     @Test func executetestopenrsync() {
         let array = readopenrsyncfile()
         if let array {
@@ -146,23 +146,23 @@ import Testing
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, false)
             print("stats: ", parsersyncoutput.stats ?? "")
             #expect(parsersyncoutput.stats == "6966 files : 0.39 MB in 1.35 seconds")
-           
+
             print("transferNumSize: ", parsersyncoutput.numbersonly?.transferNumSize ?? "")
             #expect(parsersyncoutput.numbersonly?.transferNumSize == 24929166.0)
 
-            print("deletefiles: ",parsersyncoutput.numbersonly?.deletefiles ?? "")
+            print("deletefiles: ", parsersyncoutput.numbersonly?.deletefiles ?? "")
             #expect(parsersyncoutput.numbersonly?.deletefiles == 0)
-           
-            print("newfiles: ",parsersyncoutput.numbersonly?.newfiles ?? "")
+
+            print("newfiles: ", parsersyncoutput.numbersonly?.newfiles ?? "")
             #expect(parsersyncoutput.numbersonly?.newfiles == 0)
-            
-            print("totDir: ",parsersyncoutput.numbersonly?.totDir ?? "")
+
+            print("totDir: ", parsersyncoutput.numbersonly?.totDir ?? "")
             #expect(parsersyncoutput.numbersonly?.totDir == 0)
-            
-            print("totNum: ",parsersyncoutput.numbersonly?.totNum ?? "")
+
+            print("totNum: ", parsersyncoutput.numbersonly?.totNum ?? "")
             #expect(parsersyncoutput.numbersonly?.totNum == 7312)
-            
-            print("totNumSize: ",parsersyncoutput.numbersonly?.totNumSize ?? "")
+
+            print("totNumSize: ", parsersyncoutput.numbersonly?.totNumSize ?? "")
             #expect(parsersyncoutput.numbersonly?.totNumSize == 24929166.0)
         }
     }
