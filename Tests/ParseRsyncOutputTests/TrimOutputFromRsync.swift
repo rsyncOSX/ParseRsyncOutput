@@ -5,7 +5,6 @@
 //  Created by Thomas Evensen on 07/09/2024.
 //
 
-import Combine
 import Foundation
 
 enum Rsyncerror: LocalizedError {
@@ -21,8 +20,7 @@ enum Rsyncerror: LocalizedError {
 
 @MainActor
 final class TrimOutputFromRsync {
-    var subscriptions = Set<AnyCancellable>()
-    var trimmeddata = [String]()
+    var trimmeddata: [String]?
     var errordiscovered: Bool = false
 
     // Error handling
@@ -34,29 +32,18 @@ final class TrimOutputFromRsync {
     }
 
     init(_ data: [String]) {
-        data.publisher
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .finished:
-                    return
-                case let .failure(error):
-                    return
+        trimmeddata = data.compactMap({ line in
+            do {
+                try checkforrsyncerror(line)
+            } catch let e {
+                // Only want one notification about error, not multiple
+                // Multiple can be a kind of race situation
+                if errordiscovered == false {
+                    _ = e
+                    errordiscovered = true
                 }
-            }, receiveValue: { [unowned self] line in
-                if line.last != "/" {
-                    trimmeddata.append(line)
-                    do {
-                        try checkforrsyncerror(line)
-                    } catch let e {
-                        // Only want one notification about error, not multiple
-                        // Multiple can be a kind of race situation
-                        if errordiscovered == false {
-                            let error = e
-                            errordiscovered = true
-                        }
-                    }
-                }
-            })
-            .store(in: &subscriptions)
+            }
+            return ((line.last != "/")) ? line : nil
+        })
     }
 }

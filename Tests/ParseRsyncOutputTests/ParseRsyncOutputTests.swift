@@ -85,8 +85,8 @@ import Testing
 
     @Test func executetestV3() {
         let array = readloggfileV3()
-        if let array {
-            let trimmedoutputfromrsync = TrimOutputFromRsync(array).trimmeddata
+        if let array, let trimmedoutputfromrsync = TrimOutputFromRsync(array).trimmeddata {
+            
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, true)
             print("stats: ", parsersyncoutput.stats ?? "")
             #expect(parsersyncoutput.stats == "6846 files : 0.39 MB in 0.47 seconds")
@@ -113,8 +113,8 @@ import Testing
 
     @Test func executetestV2() {
         let array = readloggfileV2()
-        if let array {
-            let trimmedoutputfromrsync = TrimOutputFromRsync(array).trimmeddata
+        if let array, let trimmedoutputfromrsync = TrimOutputFromRsync(array).trimmeddata {
+            
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, false)
             print("stats: ", parsersyncoutput.stats ?? "")
             #expect(parsersyncoutput.stats == "6846 files : 0.38 MB in 2.25 seconds")
@@ -141,8 +141,8 @@ import Testing
 
     @Test func executetestopenrsync() {
         let array = readopenrsyncfile()
-        if let array {
-            let trimmedoutputfromrsync = TrimOutputFromRsync(array).trimmeddata
+        if let array, let trimmedoutputfromrsync = TrimOutputFromRsync(array).trimmeddata {
+            
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, false)
             print("stats: ", parsersyncoutput.stats ?? "")
             #expect(parsersyncoutput.stats == "6966 files : 0.39 MB in 1.35 seconds")
