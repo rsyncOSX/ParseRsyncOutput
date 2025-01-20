@@ -7,7 +7,7 @@
 
 import Foundation
 
-@available(macOS 10.15, *)
+
 @MainActor
 final class TrimOutput {
     var trimmeddata: [String]?

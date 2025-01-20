@@ -175,7 +175,6 @@ public final class ParseRsyncOutput {
             " MB in " + String(format: "%.2f", seconds) + " seconds"
     }
 
-    @available(macOS 10.15, *)
     public init(_ output: [String], _ version3ofrsync: Bool) {
         let trimmedoutput = TrimOutput(output).trimmeddata
         guard (trimmedoutput?.count ?? 0) > 0 else { return }
