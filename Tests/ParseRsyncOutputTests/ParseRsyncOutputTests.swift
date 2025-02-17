@@ -85,7 +85,9 @@ import Testing
 
     @Test func executetestV3() {
         let array = readloggfileV3()
-        if let array, let trimmedoutputfromrsync = TrimOutputFromRsync(array).trimmeddata {
+        if let array  {
+            
+            let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
             
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, true)
             print("stats: ", parsersyncoutput.stats ?? "")
@@ -113,7 +115,9 @@ import Testing
 
     @Test func executetestV2() {
         let array = readloggfileV2()
-        if let array, let trimmedoutputfromrsync = TrimOutputFromRsync(array).trimmeddata {
+        if let array  {
+            
+            let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
             
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, false)
             print("stats: ", parsersyncoutput.stats ?? "")
@@ -141,7 +145,9 @@ import Testing
 
     @Test func executetestopenrsync() {
         let array = readopenrsyncfile()
-        if let array, let trimmedoutputfromrsync = TrimOutputFromRsync(array).trimmeddata {
+        if let array  {
+            
+            let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
             
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, false)
             print("stats: ", parsersyncoutput.stats ?? "")
