@@ -20,20 +20,20 @@ public struct StringNumbersOnly {
     public var result: String
     // ver 3.x - [Number of regular files transferred: 24]
     // ver 2.x - [Number of files transferred: 24]
-    public var files: [String]
+    public var filestransferred: [String]
     // ver 3.x - [Total transferred file size: 278,642 bytes]
     // ver 2.x - [Total transferred file size: 278197 bytes]
-    public var filesSize: [String]
+    public var totaltransferredfilessize: [String]
     // ver 3.x - [Total file size: 1,016,382,148 bytes]
     // ver 2.x - [Total file size: 1016381703 bytes]
-    public var totfileSize: [String]
+    public var totalfilesize: [String]
     // ver 3.x - [Number of files: 3,956 (reg: 3,197, dir: 758, link: 1)]
     // ver 2.x - [Number of files: 3956]
-    public var totfilesNum: [String]
+    public var numberoffiles: [String]
     // New files
-    public var new: [String]
+    public var numberofcreatedfiles: [String]
     // Delete files
-    public var delete: [String]
+    public var numberofdeletedfiles: [String]
 }
 
 @MainActor
@@ -74,20 +74,22 @@ public final class ParseRsyncOutput {
         var newfiles: Int?
         var deletefiles: Int?
 
-        guard stringnumbersonly.files.count > 0 else { return }
-        guard stringnumbersonly.filesSize.count > 0 else { return }
-        guard stringnumbersonly.totfilesNum.count > 0 else { return }
-        guard stringnumbersonly.totfileSize.count > 0 else { return }
-        guard stringnumbersonly.new.count > 0 else { return }
-        guard stringnumbersonly.delete.count > 0 else { return }
-        // Ver3 of rsync adds "," as 1000 mark, must replace it and then split numbers into components
-        let filesPart = stringnumbersonly.files[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let filesPartSize = stringnumbersonly.filesSize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let totfilesPart = stringnumbersonly.totfilesNum[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        guard stringnumbersonly.filestransferred.count > 0 else { return }
+        guard stringnumbersonly.totaltransferredfilessize.count > 0 else { return }
+        guard stringnumbersonly.totalfilesize.count > 0 else { return }
+        guard stringnumbersonly.numberoffiles.count > 0 else { return }
         
-        let totfilesPartSize = stringnumbersonly.totfileSize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let newPart = stringnumbersonly.new[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let deletePart = stringnumbersonly.delete[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        guard stringnumbersonly.numberofcreatedfiles.count > 0 else { return }
+        guard stringnumbersonly.numberofdeletedfiles.count > 0 else { return }
+        
+        // Ver3 of rsync adds "," as 1000 mark, must replace it and then split numbers into components
+        let filesPart = stringnumbersonly.filestransferred[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let filesPartSize = stringnumbersonly.totaltransferredfilessize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let totfilesPartSize = stringnumbersonly.totalfilesize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let totfilesPart = stringnumbersonly.numberoffiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let newPart = stringnumbersonly.numberofcreatedfiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let deletePart = stringnumbersonly.numberofdeletedfiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        
         // (1) ["Number", "of", "regular", "files", "transferred:", "6,846"]
         // (2) ["Total", "transferred", "file", "size:", "24,788,299", "bytes"]
         // (3) ["Number", "of", "files:", "7,192", "(reg:", "6,846", "dir:", "346", "link:", "1)"]
@@ -138,15 +140,17 @@ public final class ParseRsyncOutput {
         var totNumSize: Double?
         var transferNum: Int?
         var transferNumSize: Double?
-
-        guard stringnumbersonly.files.count > 0 else { return }
-        guard stringnumbersonly.filesSize.count > 0 else { return }
-        guard stringnumbersonly.totfilesNum.count > 0 else { return }
-        guard stringnumbersonly.totfileSize.count > 0 else { return }
-        let filesPart = stringnumbersonly.files[0].components(separatedBy: " ")
-        let filesPartSize = stringnumbersonly.filesSize[0].components(separatedBy: " ")
-        let totfilesPart = stringnumbersonly.totfilesNum[0].components(separatedBy: " ")
-        let totfilesPartSize = stringnumbersonly.totfileSize[0].components(separatedBy: " ")
+        
+        guard stringnumbersonly.filestransferred.count > 0 else { return }
+        guard stringnumbersonly.totaltransferredfilessize.count > 0 else { return }
+        guard stringnumbersonly.totalfilesize.count > 0 else { return }
+        guard stringnumbersonly.numberoffiles.count > 0 else { return }
+        
+        let filesPart = stringnumbersonly.filestransferred[0].components(separatedBy: " ")
+        let filesPartSize = stringnumbersonly.totaltransferredfilessize[0].components(separatedBy: " ")
+        let totfilesPartSize = stringnumbersonly.totalfilesize[0].components(separatedBy: " ")
+        let totfilesPart = stringnumbersonly.numberoffiles[0].components(separatedBy: " ")
+        
         // (1) ["Number", "of", "files", "transferred:", "6846"]
         // (2) ["Total", "transferred", "file", "size:", "24788299", "bytes"]
         // (3) ["Number", "of", "files:", "7192"]
@@ -224,7 +228,7 @@ public final class ParseRsyncOutput {
         let totalfilesize = preparedoutputfromrsync.filter { $0.contains("Total file size:") }
         // ver 3.x - [Total file size: 1,016,382,148 bytes]
         // ver 2.x - [Total file size: 1016381703 bytes]
-        let totaltransferredfilesSize = preparedoutputfromrsync.filter { $0.contains("Total transferred file size:") }
+        let totaltransferredfilessize = preparedoutputfromrsync.filter { $0.contains("Total transferred file size:") }
         // ver 3.x - [Total transferred file size: 278,642 bytes]
         // ver 2.x - [Total transferred file size: 278197 bytes]
        
@@ -234,14 +238,14 @@ public final class ParseRsyncOutput {
         // Delete files
         let numberofdeletedfiles = preparedoutputfromrsync.filter { $0.contains("Number of deleted files:") }
 
-        if filestransferred.count == 1, totaltransferredfilesSize.count == 1, totalfilesize.count == 1, numberoffiles.count == 1 {
+        if filestransferred.count == 1, totaltransferredfilessize.count == 1, totalfilesize.count == 1, numberoffiles.count == 1 {
             stringnumbersonly = StringNumbersOnly(result: result,
-                                                  files: filestransferred,
-                                                  filesSize: totaltransferredfilesSize,
-                                                  totfileSize: totalfilesize,
-                                                  totfilesNum: numberoffiles,
-                                                  new: numberofcreatedfiles,
-                                                  delete: numberofdeletedfiles)
+                                                  filestransferred: filestransferred,
+                                                  totaltransferredfilessize: totaltransferredfilessize,
+                                                  totalfilesize: totalfilesize,
+                                                  numberoffiles: numberoffiles,
+                                                  numberofcreatedfiles: numberofcreatedfiles,
+                                                  numberofdeletedfiles: numberofdeletedfiles)
             if version3ofrsync, let stringnumbersonly {
                 rsyncver3(stringnumbersonly: stringnumbersonly)
             } else if let stringnumbersonly {
