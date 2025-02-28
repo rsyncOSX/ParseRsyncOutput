@@ -146,10 +146,10 @@ public final class ParseRsyncOutput {
         guard stringnumbersonly.totalfilesize.count > 0 else { return }
         guard stringnumbersonly.numberoffiles.count > 0 else { return }
         
-        let filesPart = stringnumbersonly.filestransferred[0].components(separatedBy: " ")
-        let filesPartSize = stringnumbersonly.totaltransferredfilessize[0].components(separatedBy: " ")
-        let totfilesPartSize = stringnumbersonly.totalfilesize[0].components(separatedBy: " ")
-        let totfilesPart = stringnumbersonly.numberoffiles[0].components(separatedBy: " ")
+        let filestransferred = stringnumbersonly.filestransferred[0].components(separatedBy: " ")
+        let totaltransferredfilessize = stringnumbersonly.totaltransferredfilessize[0].components(separatedBy: " ")
+        let totalfilesize = stringnumbersonly.totalfilesize[0].components(separatedBy: " ")
+        let numberoffiles = stringnumbersonly.numberoffiles[0].components(separatedBy: " ")
         
         // (1) ["Number", "of", "files", "transferred:", "6846"]
         // (2) ["Total", "transferred", "file", "size:", "24788299", "bytes"]
@@ -168,10 +168,10 @@ public final class ParseRsyncOutput {
          Total bytes sent: 380178
          Total bytes received: 43172
          */
-        if filesPart.count > 4 { transferNum = Int(filesPart[4]) } else { transferNum = 0 }
-        if filesPartSize.count > 4 { transferNumSize = Double(filesPartSize[4]) } else { transferNumSize = 0 }
-        if totfilesPart.count > 3 { totNum = Int(totfilesPart[3]) } else { totNum = 0 }
-        if totfilesPartSize.count > 3 { totNumSize = Double(totfilesPartSize[3]) } else { totNumSize = 0 }
+        if filestransferred.count > 4 { transferNum = Int(filestransferred[4]) } else { transferNum = 0 }
+        if totaltransferredfilessize.count > 4 { transferNumSize = Double(totaltransferredfilessize[4]) } else { transferNumSize = 0 }
+        if totalfilesize.count > 3 { totNumSize = Double(totalfilesize[3]) } else { totNumSize = 0 }
+        if numberoffiles.count > 3 { totNum = Int(numberoffiles[3]) } else { totNum = 0 }
         
         numbersonly = NumbersOnly(totNum: totNum ?? 0,
                                   totDir: 0,
