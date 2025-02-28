@@ -84,15 +84,32 @@ public final class ParseRsyncOutput {
         let filesPart = stringnumbersonly.files[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
         let filesPartSize = stringnumbersonly.filesSize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
         let totfilesPart = stringnumbersonly.totfilesNum[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        
         let totfilesPartSize = stringnumbersonly.totfileSize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
         let newPart = stringnumbersonly.new[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
         let deletePart = stringnumbersonly.delete[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        // ["Number", "of", "regular", "files", "transferred:", "24"]
-        // ["Total", "transferred", "file", "size:", "281653", "bytes"]
-        // ["Number", "of", "files:", "3956", "(reg:", "3197", "dir:", "758", "link:", "1)"]
-        // ["Total", "file", "size:", "1016385159", "bytes"]
-        // ["Number" "of" "created" "files:" "0"]
-        // ["Number" "of" "deleted" "files:" "0"]
+        // (1) ["Number", "of", "regular", "files", "transferred:", "6,846"]
+        // (2) ["Total", "transferred", "file", "size:", "24,788,299", "bytes"]
+        // (3) ["Number", "of", "files:", "7,192", "(reg:", "6,846", "dir:", "346", "link:", "1)"]
+        // (4) ["Total", "file", "size:", "24,788,299", "bytes"]
+        // The
+        // (5) ["Number", "of", "created", "files:", "7,191", "(reg:", "6,846", "dir:", "346)"]
+        // (6) ["Number", "of", "deleted", "files:", "0"]
+        /* The parantes in "346)" is removed below
+         (3) Number of files: 7,192 (reg: 6,846, dir: 346)
+         (5) Number of created files: 7,191 (reg: 6,846, dir: 345)
+         (6) Number of deleted files: 0
+         (1) Number of regular files transferred: 6,846
+         (4) Total file size: 24,788,299 bytes
+         (2) Total transferred file size: 24,788,299 bytes
+         Literal data: 0 bytes
+         Matched data: 0 bytes
+         File list size: 0
+         File list generation time: 0.003 seconds
+         File list transfer time: 0.000 seconds
+         Total bytes sent: 394,304
+         Total bytes received: 22,226
+         */
         if filesPart.count > 5 { transferNum = Int(filesPart[5]) } else { transferNum = 0 }
         if filesPartSize.count > 4 { transferNumSize = Double(filesPartSize[4]) } else { transferNumSize = 0 }
         if totfilesPart.count > 5 { totNum = Int(totfilesPart[5]) } else { totNum = 0 }
@@ -130,10 +147,23 @@ public final class ParseRsyncOutput {
         let filesPartSize = stringnumbersonly.filesSize[0].components(separatedBy: " ")
         let totfilesPart = stringnumbersonly.totfilesNum[0].components(separatedBy: " ")
         let totfilesPartSize = stringnumbersonly.totfileSize[0].components(separatedBy: " ")
-        // ["Number", "of", "files", "transferred:", "24"]
-        // ["Total", "transferred", "file", "size:", "281579", "bytes"]
-        // ["Number", "of", "files:", "3956"]
-        // ["Total", "file", "size:", "1016385085", "bytes"]
+        // (1) ["Number", "of", "files", "transferred:", "6846"]
+        // (2) ["Total", "transferred", "file", "size:", "24788299", "bytes"]
+        // (3) ["Number", "of", "files:", "7192"]
+        // (4) ["Total", "file", "size:", "24788299", "bytes"]
+        /*
+         (3) Number of files: 7192
+         (1) Number of files transferred: 6846
+         (4) Total file size: 24788299 bytes
+         (2) Total transferred file size: 24788299 bytes
+         Literal data: 0 bytes
+         Matched data: 0 bytes
+         File list size: 336861
+         File list generation time: 0.052 seconds
+         File list transfer time: 0.000 seconds
+         Total bytes sent: 380178
+         Total bytes received: 43172
+         */
         if filesPart.count > 4 { transferNum = Int(filesPart[4]) } else { transferNum = 0 }
         if filesPartSize.count > 4 { transferNumSize = Double(filesPartSize[4]) } else { transferNumSize = 0 }
         if totfilesPart.count > 3 { totNum = Int(totfilesPart[3]) } else { totNum = 0 }
