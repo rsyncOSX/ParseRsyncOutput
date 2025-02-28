@@ -215,31 +215,33 @@ public final class ParseRsyncOutput {
         } else {
             result = "Could not set total"
         }
-        let files = preparedoutputfromrsync.filter { $0.contains("files transferred:") }
-        // ver 3.x - [Number of regular files transferred: 24]
-        // ver 2.x - [Number of files transferred: 24]
-        let filesSize = preparedoutputfromrsync.filter { $0.contains("Total transferred file size:") }
-        // ver 3.x - [Total transferred file size: 278,642 bytes]
-        // ver 2.x - [Total transferred file size: 278197 bytes]
-        let totfileSize = preparedoutputfromrsync.filter { $0.contains("Total file size:") }
-        // ver 3.x - [Total file size: 1,016,382,148 bytes]
-        // ver 2.x - [Total file size: 1016381703 bytes]
-        let totfilesNum = preparedoutputfromrsync.filter { $0.contains("Number of files:") }
+        let numberoffiles = preparedoutputfromrsync.filter { $0.contains("Number of files:") }
         // ver 3.x - [Number of files: 3,956 (reg: 3,197, dir: 758, link: 1)]
         // ver 2.x - [Number of files: 3956]
+        let filestransferred = preparedoutputfromrsync.filter { $0.contains("files transferred:") }
+        // ver 3.x - [Number of regular files transferred: 24]
+        // ver 2.x - [Number of files transferred: 24]
+        let totalfilesize = preparedoutputfromrsync.filter { $0.contains("Total file size:") }
+        // ver 3.x - [Total file size: 1,016,382,148 bytes]
+        // ver 2.x - [Total file size: 1016381703 bytes]
+        let totaltransferredfilesSize = preparedoutputfromrsync.filter { $0.contains("Total transferred file size:") }
+        // ver 3.x - [Total transferred file size: 278,642 bytes]
+        // ver 2.x - [Total transferred file size: 278197 bytes]
+       
+        
         // New files
-        let new = preparedoutputfromrsync.filter { $0.contains("Number of created files:") }
+        let numberofcreatedfiles = preparedoutputfromrsync.filter { $0.contains("Number of created files:") }
         // Delete files
-        let delete = preparedoutputfromrsync.filter { $0.contains("Number of deleted files:") }
+        let numberofdeletedfiles = preparedoutputfromrsync.filter { $0.contains("Number of deleted files:") }
 
-        if files.count == 1, filesSize.count == 1, totfileSize.count == 1, totfilesNum.count == 1 {
+        if filestransferred.count == 1, totaltransferredfilesSize.count == 1, totalfilesize.count == 1, numberoffiles.count == 1 {
             stringnumbersonly = StringNumbersOnly(result: result,
-                                                  files: files,
-                                                  filesSize: filesSize,
-                                                  totfileSize: totfileSize,
-                                                  totfilesNum: totfilesNum,
-                                                  new: new,
-                                                  delete: delete)
+                                                  files: filestransferred,
+                                                  filesSize: totaltransferredfilesSize,
+                                                  totfileSize: totalfilesize,
+                                                  totfilesNum: numberoffiles,
+                                                  new: numberofcreatedfiles,
+                                                  delete: numberofdeletedfiles)
             if version3ofrsync, let stringnumbersonly {
                 rsyncver3(stringnumbersonly: stringnumbersonly)
             } else if let stringnumbersonly {
@@ -250,3 +252,17 @@ public final class ParseRsyncOutput {
 }
 
 // swiftlint:enable cyclomatic_complexity
+
+/*
+ (3) Number of files: 7192
+ (1) Number of files transferred: 6846
+ (4) Total file size: 24788299 bytes
+ (2) Total transferred file size: 24788299 bytes
+ Literal data: 0 bytes
+ Matched data: 0 bytes
+ File list size: 336861
+ File list generation time: 0.052 seconds
+ File list transfer time: 0.000 seconds
+ Total bytes sent: 380178
+ Total bytes received: 43172
+ */
