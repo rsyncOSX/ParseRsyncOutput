@@ -172,6 +172,7 @@ public final class ParseRsyncOutput {
         if filesPartSize.count > 4 { transferNumSize = Double(filesPartSize[4]) } else { transferNumSize = 0 }
         if totfilesPart.count > 3 { totNum = Int(totfilesPart[3]) } else { totNum = 0 }
         if totfilesPartSize.count > 3 { totNumSize = Double(totfilesPartSize[3]) } else { totNumSize = 0 }
+        
         numbersonly = NumbersOnly(totNum: totNum ?? 0,
                                   totDir: 0,
                                   totNumSize: totNumSize ?? 0,
@@ -219,26 +220,27 @@ public final class ParseRsyncOutput {
         } else {
             result = "Could not set total"
         }
-        let numberoffiles = preparedoutputfromrsync.filter { $0.contains("Number of files:") }
         // ver 3.x - [Number of files: 3,956 (reg: 3,197, dir: 758, link: 1)]
         // ver 2.x - [Number of files: 3956]
-        let filestransferred = preparedoutputfromrsync.filter { $0.contains("files transferred:") }
+        let numberoffiles = preparedoutputfromrsync.filter { $0.contains("Number of files:") }
         // ver 3.x - [Number of regular files transferred: 24]
         // ver 2.x - [Number of files transferred: 24]
-        let totalfilesize = preparedoutputfromrsync.filter { $0.contains("Total file size:") }
+        let filestransferred = preparedoutputfromrsync.filter { $0.contains("files transferred:") }
         // ver 3.x - [Total file size: 1,016,382,148 bytes]
         // ver 2.x - [Total file size: 1016381703 bytes]
-        let totaltransferredfilessize = preparedoutputfromrsync.filter { $0.contains("Total transferred file size:") }
+        let totalfilesize = preparedoutputfromrsync.filter { $0.contains("Total file size:") }
         // ver 3.x - [Total transferred file size: 278,642 bytes]
         // ver 2.x - [Total transferred file size: 278197 bytes]
-       
-        
-        // New files
+        let totaltransferredfilessize = preparedoutputfromrsync.filter { $0.contains("Total transferred file size:") }
+        // ver 3.x - [Number of created files: 7,191 (reg: 6,846, dir: 345)]
+        // ver 3.x only
         let numberofcreatedfiles = preparedoutputfromrsync.filter { $0.contains("Number of created files:") }
-        // Delete files
+        // ver 3.x - [Number of deleted files: 0]
+        // ver 3.x only
         let numberofdeletedfiles = preparedoutputfromrsync.filter { $0.contains("Number of deleted files:") }
 
         if filestransferred.count == 1, totaltransferredfilessize.count == 1, totalfilesize.count == 1, numberoffiles.count == 1 {
+            
             stringnumbersonly = StringNumbersOnly(result: result,
                                                   filestransferred: filestransferred,
                                                   totaltransferredfilessize: totaltransferredfilessize,
