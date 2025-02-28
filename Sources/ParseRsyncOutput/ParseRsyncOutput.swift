@@ -262,16 +262,3 @@ public final class ParseRsyncOutput {
 
 // swiftlint:enable cyclomatic_complexity
 
-/*
- (3) Number of files: 7192
- (1) Number of files transferred: 6846
- (4) Total file size: 24788299 bytes
- (2) Total transferred file size: 24788299 bytes
- Literal data: 0 bytes
- Matched data: 0 bytes
- File list size: 336861
- File list generation time: 0.052 seconds
- File list transfer time: 0.000 seconds
- Total bytes sent: 380178
- Total bytes received: 43172
- */
