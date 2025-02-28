@@ -83,12 +83,12 @@ public final class ParseRsyncOutput {
         guard stringnumbersonly.numberofdeletedfiles.count > 0 else { return }
         
         // Ver3 of rsync adds "," as 1000 mark, must replace it and then split numbers into components
-        let filesPart = stringnumbersonly.filestransferred[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let filesPartSize = stringnumbersonly.totaltransferredfilessize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let totfilesPartSize = stringnumbersonly.totalfilesize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let totfilesPart = stringnumbersonly.numberoffiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let newPart = stringnumbersonly.numberofcreatedfiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let deletePart = stringnumbersonly.numberofdeletedfiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let filestransferred = stringnumbersonly.filestransferred[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let totaltransferredfilessize = stringnumbersonly.totaltransferredfilessize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let totalfilesize = stringnumbersonly.totalfilesize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let numberoffiles = stringnumbersonly.numberoffiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let numberofcreatedfiles = stringnumbersonly.numberofcreatedfiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
+        let numberofdeletedfiles = stringnumbersonly.numberofdeletedfiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
         
         // (1) ["Number", "of", "regular", "files", "transferred:", "6,846"]
         // (2) ["Total", "transferred", "file", "size:", "24,788,299", "bytes"]
@@ -112,17 +112,17 @@ public final class ParseRsyncOutput {
          Total bytes sent: 394,304
          Total bytes received: 22,226
          */
-        if filesPart.count > 5 { transferNum = Int(filesPart[5]) } else { transferNum = 0 }
-        if filesPartSize.count > 4 { transferNumSize = Double(filesPartSize[4]) } else { transferNumSize = 0 }
-        if totfilesPart.count > 5 { totNum = Int(totfilesPart[5]) } else { totNum = 0 }
-        if totfilesPartSize.count > 3 { totNumSize = Double(totfilesPartSize[3]) } else { totNumSize = 0 }
-        if totfilesPart.count > 7 {
-            totDir = Int(totfilesPart[7].replacingOccurrences(of: ")", with: ""))
+        if filestransferred.count > 5 { transferNum = Int(filestransferred[5]) } else { transferNum = 0 }
+        if totaltransferredfilessize.count > 4 { transferNumSize = Double(totaltransferredfilessize[4]) } else { transferNumSize = 0 }
+        if totalfilesize.count > 3 { totNumSize = Double(totalfilesize[3]) } else { totNumSize = 0 }
+        if numberoffiles.count > 5 { totNum = Int(numberoffiles[5]) } else { totNum = 0 }
+        if numberoffiles.count > 7 {
+            totDir = Int(numberoffiles[7].replacingOccurrences(of: ")", with: ""))
         } else {
             totDir = 0
         }
-        if newPart.count > 4 { newfiles = Int(newPart[4]) } else { newfiles = 0 }
-        if deletePart.count > 4 { deletefiles = Int(deletePart[4]) } else { deletefiles = 0 }
+        if numberofcreatedfiles.count > 4 { newfiles = Int(numberofcreatedfiles[4]) } else { newfiles = 0 }
+        if numberofdeletedfiles.count > 4 { deletefiles = Int(numberofdeletedfiles[4]) } else { deletefiles = 0 }
         numbersonly = NumbersOnly(totNum: totNum ?? 0,
                                   totDir: totDir ?? 0,
                                   totNumSize: totNumSize ?? 0,
