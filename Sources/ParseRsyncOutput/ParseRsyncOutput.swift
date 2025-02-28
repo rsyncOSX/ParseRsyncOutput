@@ -66,11 +66,13 @@ public final class ParseRsyncOutput {
     }
 
     public func rsyncver3(stringnumbersonly: StringNumbersOnly) {
-        var totNum: Int?
-        var totDir: Int?
-        var totNumSize: Double?
+        
         var transferNum: Int?
         var transferNumSize: Double?
+        var totNumSize: Double?
+        var totNum: Int?
+        var totDir: Int?
+        
         var newfiles: Int?
         var deletefiles: Int?
 
@@ -136,10 +138,11 @@ public final class ParseRsyncOutput {
     }
 
     public func rsyncver2(stringnumbersonly: StringNumbersOnly) {
-        var totNum: Int?
-        var totNumSize: Double?
-        var transferNum: Int?
-        var transferNumSize: Double?
+       
+        var my_filestransferred: Int?
+        var my_totaltransferredfilessize: Double?
+        var my_totalfilesize: Double?
+        var my_numberoffiles: Int?
         
         guard stringnumbersonly.filestransferred.count > 0 else { return }
         guard stringnumbersonly.totaltransferredfilessize.count > 0 else { return }
@@ -168,16 +171,16 @@ public final class ParseRsyncOutput {
          Total bytes sent: 380178
          Total bytes received: 43172
          */
-        if filestransferred.count > 4 { transferNum = Int(filestransferred[4]) } else { transferNum = 0 }
-        if totaltransferredfilessize.count > 4 { transferNumSize = Double(totaltransferredfilessize[4]) } else { transferNumSize = 0 }
-        if totalfilesize.count > 3 { totNumSize = Double(totalfilesize[3]) } else { totNumSize = 0 }
-        if numberoffiles.count > 3 { totNum = Int(numberoffiles[3]) } else { totNum = 0 }
+        if filestransferred.count > 4 { my_filestransferred = Int(filestransferred[4]) } else { my_filestransferred = 0 }
+        if totaltransferredfilessize.count > 4 { my_totaltransferredfilessize = Double(totaltransferredfilessize[4]) } else { my_totaltransferredfilessize = 0 }
+        if totalfilesize.count > 3 { my_totalfilesize = Double(totalfilesize[3]) } else { my_totalfilesize = 0 }
+        if numberoffiles.count > 3 { my_numberoffiles = Int(numberoffiles[3]) } else { my_numberoffiles = 0 }
         
-        numbersonly = NumbersOnly(totNum: totNum ?? 0,
+        numbersonly = NumbersOnly(totNum: my_numberoffiles ?? 0,
                                   totDir: 0,
-                                  totNumSize: totNumSize ?? 0,
-                                  transferNum: transferNum ?? 0,
-                                  transferNumSize: transferNumSize ?? 0,
+                                  totNumSize: my_totalfilesize ?? 0,
+                                  transferNum: my_filestransferred ?? 0,
+                                  transferNumSize: my_totaltransferredfilessize ?? 0,
                                   newfiles: 0,
                                   deletefiles: 0)
         if let numbersonly {
