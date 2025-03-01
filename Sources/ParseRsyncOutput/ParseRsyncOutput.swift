@@ -40,7 +40,6 @@ public struct StringNumbersOnly {
 public final class ParseRsyncOutput {
     public var stringnumbersonly: StringNumbersOnly?
     public var numbersonly: NumbersOnly?
-    public var count: Int?
     public var stats: String?
 
     public var formatted_transferredNumber: String {
@@ -126,6 +125,7 @@ public final class ParseRsyncOutput {
         }
         if numberofcreatedfiles.count > 4 { my_numberofcreatedfiles = Int(numberofcreatedfiles[4]) } else { my_numberofcreatedfiles = 0 }
         if numberofdeletedfiles.count > 4 { my_numberofdeletedfiles = Int(numberofdeletedfiles[4]) } else { my_numberofdeletedfiles = 0 }
+        
         numbersonly = NumbersOnly(numberoffiles: my_numberoffiles ?? 0,
                                   totaldirectories: my_totaldirectories ?? 0,
                                   totalfilesize: my_totalfilesize ?? 0,
