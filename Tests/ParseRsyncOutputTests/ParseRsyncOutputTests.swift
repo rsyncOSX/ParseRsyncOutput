@@ -93,23 +93,23 @@ import Testing
             print("stats: ", parsersyncoutput.stats ?? "")
             #expect(parsersyncoutput.stats == "6846 files : 0.39 MB in 0.47 seconds")
 
-            print("transferNumSize: ", parsersyncoutput.numbersonly?.transferNumSize ?? "")
-            #expect(parsersyncoutput.numbersonly?.transferNumSize == 24788299.0)
+            print("transferNumSize: ", parsersyncoutput.numbersonly?.totaltransferredfilessize ?? "")
+            #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24788299.0)
 
-            print("deletefiles: ", parsersyncoutput.numbersonly?.deletefiles ?? "")
-            #expect(parsersyncoutput.numbersonly?.deletefiles == 0)
+            print("deletefiles: ", parsersyncoutput.numbersonly?.numberofdeletedfiles ?? "")
+            #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
 
-            print("newfiles: ", parsersyncoutput.numbersonly?.newfiles ?? "")
-            #expect(parsersyncoutput.numbersonly?.newfiles == 7191)
+            print("newfiles: ", parsersyncoutput.numbersonly?.numberofcreatedfiles ?? "")
+            #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 7191)
 
-            print("totDir: ", parsersyncoutput.numbersonly?.totDir ?? "")
-            #expect(parsersyncoutput.numbersonly?.totDir == 346)
+            print("totDir: ", parsersyncoutput.numbersonly?.totaldirectories ?? "")
+            #expect(parsersyncoutput.numbersonly?.totaldirectories == 346)
 
-            print("totNum: ", parsersyncoutput.numbersonly?.totNum ?? "")
-            #expect(parsersyncoutput.numbersonly?.totNum == 6846)
+            print("totNum: ", parsersyncoutput.numbersonly?.numberoffiles ?? "")
+            #expect(parsersyncoutput.numbersonly?.numberoffiles == 6846)
 
-            print("totNumSize: ", parsersyncoutput.numbersonly?.totNumSize ?? "")
-            #expect(parsersyncoutput.numbersonly?.totNumSize == 24788299.0)
+            print("totNumSize: ", parsersyncoutput.numbersonly?.totalfilesize ?? "")
+            #expect(parsersyncoutput.numbersonly?.totalfilesize == 24788299.0)
         }
     }
 
@@ -123,23 +123,23 @@ import Testing
             print("stats: ", parsersyncoutput.stats ?? "")
             #expect(parsersyncoutput.stats == "6846 files : 0.38 MB in 2.25 seconds")
 
-            print("transferNumSize: ", parsersyncoutput.numbersonly?.transferNumSize ?? "")
-            #expect(parsersyncoutput.numbersonly?.transferNumSize == 24788299.0)
+            print("transferNumSize: ", parsersyncoutput.numbersonly?.totaltransferredfilessize ?? "")
+            #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24788299.0)
 
-            print("deletefiles: ", parsersyncoutput.numbersonly?.deletefiles ?? "")
-            #expect(parsersyncoutput.numbersonly?.deletefiles == 0)
+            print("deletefiles: ", parsersyncoutput.numbersonly?.numberofdeletedfiles ?? "")
+            #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
 
-            print("newfiles: ", parsersyncoutput.numbersonly?.newfiles ?? "")
-            #expect(parsersyncoutput.numbersonly?.newfiles == 0)
+            print("newfiles: ", parsersyncoutput.numbersonly?.numberofcreatedfiles ?? "")
+            #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
 
-            print("totDir: ", parsersyncoutput.numbersonly?.totDir ?? "")
-            #expect(parsersyncoutput.numbersonly?.totDir == 0)
+            print("totDir: ", parsersyncoutput.numbersonly?.totaldirectories ?? "")
+            #expect(parsersyncoutput.numbersonly?.totaldirectories == 0)
 
-            print("totNum: ", parsersyncoutput.numbersonly?.totNum ?? "")
-            #expect(parsersyncoutput.numbersonly?.totNum == 7192)
+            print("totNum: ", parsersyncoutput.numbersonly?.numberoffiles ?? "")
+            #expect(parsersyncoutput.numbersonly?.numberoffiles == 7192)
 
-            print("totNumSize: ", parsersyncoutput.numbersonly?.totNumSize ?? "")
-            #expect(parsersyncoutput.numbersonly?.totNumSize == 24788299.0)
+            print("totNumSize: ", parsersyncoutput.numbersonly?.totalfilesize ?? "")
+            #expect(parsersyncoutput.numbersonly?.totalfilesize == 24788299.0)
         }
     }
 
@@ -153,23 +153,23 @@ import Testing
             print("stats: ", parsersyncoutput.stats ?? "")
             #expect(parsersyncoutput.stats == "6966 files : 0.39 MB in 1.35 seconds")
 
-            print("transferNumSize: ", parsersyncoutput.numbersonly?.transferNumSize ?? "")
-            #expect(parsersyncoutput.numbersonly?.transferNumSize == 24929166.0)
+            print("transferNumSize: ", parsersyncoutput.numbersonly?.totaltransferredfilessize ?? "")
+            #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24929166.0)
 
-            print("deletefiles: ", parsersyncoutput.numbersonly?.deletefiles ?? "")
-            #expect(parsersyncoutput.numbersonly?.deletefiles == 0)
+            print("deletefiles: ", parsersyncoutput.numbersonly?.numberofdeletedfiles ?? "")
+            #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
 
-            print("newfiles: ", parsersyncoutput.numbersonly?.newfiles ?? "")
-            #expect(parsersyncoutput.numbersonly?.newfiles == 0)
+            print("newfiles: ", parsersyncoutput.numbersonly?.numberofcreatedfiles ?? "")
+            #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
 
-            print("totDir: ", parsersyncoutput.numbersonly?.totDir ?? "")
-            #expect(parsersyncoutput.numbersonly?.totDir == 0)
+            print("totDir: ", parsersyncoutput.numbersonly?.totaldirectories ?? "")
+            #expect(parsersyncoutput.numbersonly?.totaldirectories == 0)
 
-            print("totNum: ", parsersyncoutput.numbersonly?.totNum ?? "")
-            #expect(parsersyncoutput.numbersonly?.totNum == 7312)
+            print("totNum: ", parsersyncoutput.numbersonly?.numberoffiles ?? "")
+            #expect(parsersyncoutput.numbersonly?.numberoffiles == 7312)
 
-            print("totNumSize: ", parsersyncoutput.numbersonly?.totNumSize ?? "")
-            #expect(parsersyncoutput.numbersonly?.totNumSize == 24929166.0)
+            print("totNumSize: ", parsersyncoutput.numbersonly?.totalfilesize ?? "")
+            #expect(parsersyncoutput.numbersonly?.totalfilesize == 24929166.0)
         }
     }
 }

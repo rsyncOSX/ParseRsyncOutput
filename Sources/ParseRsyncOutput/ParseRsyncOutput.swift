@@ -5,13 +5,13 @@ import Foundation
 
 @MainActor
 public struct NumbersOnly {
-    public var totNum: Int
-    public var totDir: Int
-    public var totNumSize: Double
-    public var transferNum: Int
-    public var transferNumSize: Double
-    public var newfiles: Int
-    public var deletefiles: Int
+    public var numberoffiles: Int
+    public var totaldirectories: Int
+    public var totalfilesize: Double
+    public var filestransferred: Int
+    public var totaltransferredfilessize: Double
+    public var numberofcreatedfiles: Int
+    public var numberofdeletedfiles: Int
 }
 
 @MainActor
@@ -44,25 +44,25 @@ public final class ParseRsyncOutput {
     public var stats: String?
 
     public var formatted_transferredNumber: String {
-        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.transferNum ?? 0), number: NumberFormatter.Style.none)
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.filestransferred ?? 0), number: NumberFormatter.Style.none)
     }
     public var formatted_totalNumber: String {
-        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totNum ?? 0), number: NumberFormatter.Style.decimal)
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.numberoffiles ?? 0), number: NumberFormatter.Style.decimal)
     }
     public var formatted_totalNumberSizebytes: String {
-        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totNumSize ?? 0), number: NumberFormatter.Style.decimal)
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totalfilesize ?? 0), number: NumberFormatter.Style.decimal)
     }
     public var formatted_totalDirs: String {
-        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totDir ?? 0), number: NumberFormatter.Style.decimal)
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totaldirectories ?? 0), number: NumberFormatter.Style.decimal)
     }
     public var formatted_totalNumber_totalDirs: String {
-        NumberFormatter.localizedString(from: NSNumber(value: (numbersonly?.totDir ?? 0) + (numbersonly?.totNum ?? 0)), number: NumberFormatter.Style.decimal)
+        NumberFormatter.localizedString(from: NSNumber(value: (numbersonly?.totaldirectories ?? 0) + (numbersonly?.numberoffiles ?? 0)), number: NumberFormatter.Style.decimal)
     }
     public var formatted_newfiles: String {
-        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.newfiles ?? 0), number: NumberFormatter.Style.none)
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.numberofcreatedfiles ?? 0), number: NumberFormatter.Style.none)
     }
     public var formatted_deletefiles: String {
-        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.deletefiles ?? 0), number: NumberFormatter.Style.none)
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.numberofdeletedfiles ?? 0), number: NumberFormatter.Style.none)
     }
 
     public func rsyncver3(stringnumbersonly: StringNumbersOnly) {
@@ -126,13 +126,13 @@ public final class ParseRsyncOutput {
         }
         if numberofcreatedfiles.count > 4 { my_numberofcreatedfiles = Int(numberofcreatedfiles[4]) } else { my_numberofcreatedfiles = 0 }
         if numberofdeletedfiles.count > 4 { my_numberofdeletedfiles = Int(numberofdeletedfiles[4]) } else { my_numberofdeletedfiles = 0 }
-        numbersonly = NumbersOnly(totNum: my_numberoffiles ?? 0,
-                                  totDir: my_totaldirectories ?? 0,
-                                  totNumSize: my_totalfilesize ?? 0,
-                                  transferNum: my_filestransferred ?? 0,
-                                  transferNumSize: my_totaltransferredfilessize ?? 0,
-                                  newfiles: my_numberofcreatedfiles ?? 0,
-                                  deletefiles: my_numberofdeletedfiles ?? 0)
+        numbersonly = NumbersOnly(numberoffiles: my_numberoffiles ?? 0,
+                                  totaldirectories: my_totaldirectories ?? 0,
+                                  totalfilesize: my_totalfilesize ?? 0,
+                                  filestransferred: my_filestransferred ?? 0,
+                                  totaltransferredfilessize: my_totaltransferredfilessize ?? 0,
+                                  numberofcreatedfiles: my_numberofcreatedfiles ?? 0,
+                                  numberofdeletedfiles: my_numberofdeletedfiles ?? 0)
         if let numbersonly {
             stats = stats(true, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
         }
@@ -177,13 +177,14 @@ public final class ParseRsyncOutput {
         if totalfilesize.count > 3 { my_totalfilesize = Double(totalfilesize[3]) } else { my_totalfilesize = 0 }
         if numberoffiles.count > 3 { my_numberoffiles = Int(numberoffiles[3]) } else { my_numberoffiles = 0 }
         
-        numbersonly = NumbersOnly(totNum: my_numberoffiles ?? 0,
-                                  totDir: 0,
-                                  totNumSize: my_totalfilesize ?? 0,
-                                  transferNum: my_filestransferred ?? 0,
-                                  transferNumSize: my_totaltransferredfilessize ?? 0,
-                                  newfiles: 0,
-                                  deletefiles: 0)
+        numbersonly = NumbersOnly(numberoffiles: my_numberoffiles ?? 0,
+                                  totaldirectories: 0,
+                                  totalfilesize: my_totalfilesize ?? 0,
+                                  filestransferred: my_filestransferred ?? 0,
+                                  totaltransferredfilessize: my_totaltransferredfilessize ?? 0,
+                                  numberofcreatedfiles: 0,
+                                  numberofdeletedfiles: 0)
+        
         if let numbersonly {
             stats = stats(false, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
         }
@@ -209,7 +210,7 @@ public final class ParseRsyncOutput {
         seconds = bytesTotalsent / bytesSec
         bytesTotal = bytesTotalsent
 
-        return String(numbersonly.transferNum) + " files : " +
+        return String(numbersonly.filestransferred) + " files : " +
             String(format: "%.2f", (bytesTotal / 1000) / 1000) +
             " MB in " + String(format: "%.2f", seconds) + " seconds"
     }
