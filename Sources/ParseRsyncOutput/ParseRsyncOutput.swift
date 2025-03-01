@@ -71,11 +71,11 @@ public final class ParseRsyncOutput {
         var my_totaltransferredfilessize: Double?
         var my_totalfilesize: Double?
         var my_numberoffiles: Int?
+       
+        var my_numberofcreatedfiles: Int?
+        var my_numberofdeletedfiles: Int?
         
-        var totDir: Int?
-        
-        var newfiles: Int?
-        var deletefiles: Int?
+        var my_totaldirectories: Int?
 
         guard stringnumbersonly.filestransferred.count > 0 else { return }
         guard stringnumbersonly.totaltransferredfilessize.count > 0 else { return }
@@ -120,19 +120,19 @@ public final class ParseRsyncOutput {
         if totalfilesize.count > 3 { my_totalfilesize = Double(totalfilesize[3]) } else { my_totalfilesize = 0 }
         if numberoffiles.count > 5 { my_numberoffiles = Int(numberoffiles[5]) } else { my_numberoffiles = 0 }
         if numberoffiles.count > 7 {
-            totDir = Int(numberoffiles[7].replacingOccurrences(of: ")", with: ""))
+            my_totaldirectories = Int(numberoffiles[7].replacingOccurrences(of: ")", with: ""))
         } else {
-            totDir = 0
+            my_totaldirectories = 0
         }
-        if numberofcreatedfiles.count > 4 { newfiles = Int(numberofcreatedfiles[4]) } else { newfiles = 0 }
-        if numberofdeletedfiles.count > 4 { deletefiles = Int(numberofdeletedfiles[4]) } else { deletefiles = 0 }
+        if numberofcreatedfiles.count > 4 { my_numberofcreatedfiles = Int(numberofcreatedfiles[4]) } else { my_numberofcreatedfiles = 0 }
+        if numberofdeletedfiles.count > 4 { my_numberofdeletedfiles = Int(numberofdeletedfiles[4]) } else { my_numberofdeletedfiles = 0 }
         numbersonly = NumbersOnly(totNum: my_numberoffiles ?? 0,
-                                  totDir: totDir ?? 0,
+                                  totDir: my_totaldirectories ?? 0,
                                   totNumSize: my_totalfilesize ?? 0,
                                   transferNum: my_filestransferred ?? 0,
                                   transferNumSize: my_totaltransferredfilessize ?? 0,
-                                  newfiles: newfiles ?? 0,
-                                  deletefiles: deletefiles ?? 0)
+                                  newfiles: my_numberofcreatedfiles ?? 0,
+                                  deletefiles: my_numberofdeletedfiles ?? 0)
         if let numbersonly {
             stats = stats(true, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
         }
