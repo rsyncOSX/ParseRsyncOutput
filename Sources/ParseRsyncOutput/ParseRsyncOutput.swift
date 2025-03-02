@@ -42,25 +42,25 @@ public final class ParseRsyncOutput {
     public var numbersonly: NumbersOnly?
     public var stats: String?
 
-    public var formatted_transferredNumber: String {
+    public var formatted_filestransferred: String {
         NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.filestransferred ?? 0), number: NumberFormatter.Style.none)
     }
-    public var formatted_totalNumber: String {
+    public var formatted_numberoffiles: String {
         NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.numberoffiles ?? 0), number: NumberFormatter.Style.decimal)
     }
-    public var formatted_totalNumberSizebytes: String {
+    public var formatted_totalfilesize: String {
         NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totalfilesize ?? 0), number: NumberFormatter.Style.decimal)
     }
-    public var formatted_totalDirs: String {
+    public var formatted_totaldirectories: String {
         NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totaldirectories ?? 0), number: NumberFormatter.Style.decimal)
     }
     public var formatted_totalNumber_totalDirs: String {
         NumberFormatter.localizedString(from: NSNumber(value: (numbersonly?.totaldirectories ?? 0) + (numbersonly?.numberoffiles ?? 0)), number: NumberFormatter.Style.decimal)
     }
-    public var formatted_newfiles: String {
+    public var formatted_numberofcreatedfiles: String {
         NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.numberofcreatedfiles ?? 0), number: NumberFormatter.Style.none)
     }
-    public var formatted_deletefiles: String {
+    public var formatted_numberofdeletedfiles: String {
         NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.numberofdeletedfiles ?? 0), number: NumberFormatter.Style.none)
     }
 
