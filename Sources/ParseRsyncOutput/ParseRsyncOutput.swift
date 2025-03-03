@@ -227,23 +227,35 @@ public final class ParseRsyncOutput {
         }
         // ver 3.x - [Number of files: 3,956 (reg: 3,197, dir: 758, link: 1)]
         // ver 2.x - [Number of files: 3956]
-        let numberoffiles = preparedoutputfromrsync.filter { $0.contains("Number of files:") }
+        let numberoffiles = preparedoutputfromrsync.compactMap {
+            $0.contains("Number of files:") ? $0 : nil
+        }
         // ver 3.x - [Number of regular files transferred: 24]
         // ver 2.x - [Number of files transferred: 24]
-        let filestransferred = preparedoutputfromrsync.filter { $0.contains("files transferred:") }
+        let filestransferred = preparedoutputfromrsync.compactMap {
+            $0.contains("files transferred:") ? $0 : nil
+        }
         // ver 3.x - [Total file size: 1,016,382,148 bytes]
         // ver 2.x - [Total file size: 1016381703 bytes]
-        let totalfilesize = preparedoutputfromrsync.filter { $0.contains("Total file size:") }
+        let totalfilesize = preparedoutputfromrsync.compactMap {
+            $0.contains("Total file size:") ? $0 : nil
+        }
         // ver 3.x - [Total transferred file size: 278,642 bytes]
         // ver 2.x - [Total transferred file size: 278197 bytes]
-        let totaltransferredfilessize = preparedoutputfromrsync.filter { $0.contains("Total transferred file size:") }
+        let totaltransferredfilessize = preparedoutputfromrsync.compactMap {
+            $0.contains("Total transferred file size:") ? $0 : nil
+        }
         // ver 3.x - [Number of created files: 7,191 (reg: 6,846, dir: 345)]
         // ver 3.x only
-        let numberofcreatedfiles = preparedoutputfromrsync.filter { $0.contains("Number of created files:") }
+        let numberofcreatedfiles = preparedoutputfromrsync.compactMap {
+            $0.contains("Number of created files:") ? $0 : nil
+        }
         // ver 3.x - [Number of deleted files: 0]
         // ver 3.x only
-        let numberofdeletedfiles = preparedoutputfromrsync.filter { $0.contains("Number of deleted files:") }
-
+        let numberofdeletedfiles = preparedoutputfromrsync.compactMap {
+            $0.contains("Number of deleted files:") ? $0 : nil
+        }
+        
         if filestransferred.count == 1, totaltransferredfilessize.count == 1, totalfilesize.count == 1, numberoffiles.count == 1 {
             
             stringnumbersonly = StringNumbersOnly(result: result,
