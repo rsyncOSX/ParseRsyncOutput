@@ -214,6 +214,18 @@ public final class ParseRsyncOutput {
             String(format: "%.2f", (bytesTotal / 1000) / 1000) +
             " MB in " + String(format: "%.2f", seconds) + " seconds"
     }
+    
+    public func returnnumber( _ input: String) -> [Int] {
+        var numbers: [Int] = []
+        let test1 = input.replacingOccurrences(of: ",", with: "")
+        let stringArray = test1.components(separatedBy: CharacterSet.decimalDigits.inverted)
+        for item in stringArray {
+            if let number = Int(item) {
+                numbers.append(number)
+            }
+        }
+        return numbers
+    }
 
     public init(_ preparedoutputfromrsync: [String], _ version3ofrsync: Bool) {
         var result = ""
@@ -255,7 +267,7 @@ public final class ParseRsyncOutput {
         let numberofdeletedfiles = preparedoutputfromrsync.compactMap {
             $0.contains("Number of deleted files:") ? $0 : nil
         }
-        
+                
         if filestransferred.count == 1, totaltransferredfilessize.count == 1, totalfilesize.count == 1, numberoffiles.count == 1 {
             
             stringnumbersonly = StringNumbersOnly(result: result,
@@ -265,6 +277,14 @@ public final class ParseRsyncOutput {
                                                   numberoffiles: numberoffiles,
                                                   numberofcreatedfiles: numberofcreatedfiles,
                                                   numberofdeletedfiles: numberofdeletedfiles)
+
+            print(returnnumber(filestransferred[0]))
+            print(returnnumber(totaltransferredfilessize[0]))
+            print(returnnumber(totalfilesize[0]))
+            print(returnnumber(numberoffiles[0]))
+            if numberofcreatedfiles.count > 0 { print(returnnumber(numberofcreatedfiles[0])) }
+            if numberofdeletedfiles.count > 0 { print(returnnumber(numberofdeletedfiles[0])) }
+            
             if version3ofrsync, let stringnumbersonly {
                 rsyncver3(stringnumbersonly: stringnumbersonly)
             } else if let stringnumbersonly {
