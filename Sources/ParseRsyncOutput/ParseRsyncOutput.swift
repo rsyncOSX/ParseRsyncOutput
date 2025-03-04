@@ -86,8 +86,8 @@ public final class ParseRsyncOutput {
         my_totaldirectories = returnIntNumber(stringnumbersonly.numberoffiles[0])
         
         
-        numbersonly = NumbersOnly(numberoffiles: my_numberoffiles?[0] ?? 0,
-                                  totaldirectories: my_totaldirectories?[0] ?? 0,
+        numbersonly = NumbersOnly(numberoffiles: my_numberoffiles?[1] ?? 0,
+                                  totaldirectories: my_totaldirectories?[2] ?? 0,
                                   totalfilesize: my_totalfilesize?[0] ?? 0,
                                   filestransferred: my_filestransferred?[0] ?? 0,
                                   totaltransferredfilessize: my_totaltransferredfilessize?[0] ?? 0,
@@ -151,12 +151,30 @@ public final class ParseRsyncOutput {
     }
 
     public func rsyncver2(stringnumbersonly: StringNumbersOnly) {
-       
-        var my_filestransferred: Int?
-        var my_totaltransferredfilessize: Double?
-        var my_totalfilesize: Double?
-        var my_numberoffiles: Int?
         
+        var my_filestransferred: [Int]?
+        var my_totaltransferredfilessize: [Double]?
+        var my_totalfilesize: [Double]?
+        var my_numberoffiles: [Int]?
+        
+        my_filestransferred = returnIntNumber(stringnumbersonly.filestransferred[0])
+        my_totaltransferredfilessize = returnDoubleNumber(stringnumbersonly.totaltransferredfilessize[0])
+        
+        my_totalfilesize = returnDoubleNumber(stringnumbersonly.totalfilesize[0])
+        my_numberoffiles = returnIntNumber(stringnumbersonly.numberoffiles[0])
+       
+        numbersonly = NumbersOnly(numberoffiles: my_numberoffiles?[0] ?? 0,
+                                  totaldirectories: 0,
+                                  totalfilesize: my_totalfilesize?[0] ?? 0,
+                                  filestransferred: my_filestransferred?[0] ?? 0,
+                                  totaltransferredfilessize: my_totaltransferredfilessize?[0] ?? 0,
+                                  numberofcreatedfiles: 0,
+                                  numberofdeletedfiles: 0)
+        if let numbersonly {
+            stats = stats(true, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
+        }
+       
+        /*
         guard stringnumbersonly.filestransferred.count > 0 else { return }
         guard stringnumbersonly.totaltransferredfilessize.count > 0 else { return }
         guard stringnumbersonly.totalfilesize.count > 0 else { return }
@@ -166,7 +184,7 @@ public final class ParseRsyncOutput {
         let totaltransferredfilessize = stringnumbersonly.totaltransferredfilessize[0].components(separatedBy: " ")
         let totalfilesize = stringnumbersonly.totalfilesize[0].components(separatedBy: " ")
         let numberoffiles = stringnumbersonly.numberoffiles[0].components(separatedBy: " ")
-        
+        */
         // (1) ["Number", "of", "files", "transferred:", "6846"]
         // (2) ["Total", "transferred", "file", "size:", "24788299", "bytes"]
         // (3) ["Number", "of", "files:", "7192"]
@@ -183,7 +201,7 @@ public final class ParseRsyncOutput {
          File list transfer time: 0.000 seconds
          Total bytes sent: 380178
          Total bytes received: 43172
-         */
+        
         if filestransferred.count > 4 { my_filestransferred = Int(filestransferred[4]) } else { my_filestransferred = 0 }
         if totaltransferredfilessize.count > 4 { my_totaltransferredfilessize = Double(totaltransferredfilessize[4]) } else { my_totaltransferredfilessize = 0 }
         if totalfilesize.count > 3 { my_totalfilesize = Double(totalfilesize[3]) } else { my_totalfilesize = 0 }
@@ -196,10 +214,13 @@ public final class ParseRsyncOutput {
                                   totaltransferredfilessize: my_totaltransferredfilessize ?? 0,
                                   numberofcreatedfiles: 0,
                                   numberofdeletedfiles: 0)
+         
+         if let numbersonly {
+             stats = stats(false, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
+         }
+         */
         
-        if let numbersonly {
-            stats = stats(false, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
-        }
+        
     }
 
     public func stats(_ version3ofrsync: Bool,
