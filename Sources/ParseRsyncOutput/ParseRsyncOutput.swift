@@ -76,16 +76,20 @@ public final class ParseRsyncOutput {
         
         my_filestransferred = returnIntNumber(stringnumbersonly.filestransferred[0])
         my_totaltransferredfilessize = returnDoubleNumber(stringnumbersonly.totaltransferredfilessize[0])
-        
         my_totalfilesize = returnDoubleNumber(stringnumbersonly.totalfilesize[0])
         my_numberoffiles = returnIntNumber(stringnumbersonly.numberoffiles[0])
-       
         my_numberofcreatedfiles = returnIntNumber(stringnumbersonly.numberofcreatedfiles[0])
         my_numberofdeletedfiles = returnIntNumber(stringnumbersonly.numberofdeletedfiles[0])
-        
         my_totaldirectories = returnIntNumber(stringnumbersonly.numberoffiles[0])
         
-        
+        guard my_filestransferred?.count ?? 0 > 0 else { return }
+        guard my_totaltransferredfilessize?.count ?? 0 > 0 else { return }
+        guard my_totalfilesize?.count ?? 0 > 0 else { return }
+        guard my_numberoffiles?.count ?? 0 > 0 else { return }
+        guard my_numberofcreatedfiles?.count ?? 0 > 0 else { return }
+        guard my_numberofdeletedfiles?.count ?? 0 > 0 else { return }
+        guard my_totaldirectories?.count ?? 0 > 0 else { return }
+       
         numbersonly = NumbersOnly(numberoffiles: my_numberoffiles?[1] ?? 0,
                                   totaldirectories: my_totaldirectories?[2] ?? 0,
                                   totalfilesize: my_totalfilesize?[0] ?? 0,
@@ -105,12 +109,19 @@ public final class ParseRsyncOutput {
         var my_totalfilesize: [Double]?
         var my_numberoffiles: [Int]?
         
+        // returnIntNumber and returnDoubleNumber always returns one value. If it fails
+        // it returns a [0]
+        
         my_filestransferred = returnIntNumber(stringnumbersonly.filestransferred[0])
         my_totaltransferredfilessize = returnDoubleNumber(stringnumbersonly.totaltransferredfilessize[0])
-        
         my_totalfilesize = returnDoubleNumber(stringnumbersonly.totalfilesize[0])
         my_numberoffiles = returnIntNumber(stringnumbersonly.numberoffiles[0])
-       
+        
+        guard my_filestransferred?.count ?? 0 > 0 else { return }
+        guard my_totaltransferredfilessize?.count ?? 0 > 0 else { return }
+        guard my_totalfilesize?.count ?? 0 > 0 else { return }
+        guard my_numberoffiles?.count ?? 0 > 0 else { return }
+        
         numbersonly = NumbersOnly(numberoffiles: my_numberoffiles?[0] ?? 0,
                                   totaldirectories: 0,
                                   totalfilesize: my_totalfilesize?[0] ?? 0,
@@ -157,7 +168,12 @@ public final class ParseRsyncOutput {
                 numbers.append(number)
             }
         }
-        return numbers
+        if numbers.count == 0 {
+            return [0]
+        } else {
+            return numbers
+        }
+       
     }
     
     public func returnDoubleNumber( _ input: String) -> [Double] {
@@ -169,7 +185,11 @@ public final class ParseRsyncOutput {
                 numbers.append(number)
             }
         }
-        return numbers
+        if numbers.count == 0 {
+            return [0]
+        } else {
+            return numbers
+        }
     }
 
     public init(_ preparedoutputfromrsync: [String], _ version3ofrsync: Bool) {
@@ -233,6 +253,9 @@ public final class ParseRsyncOutput {
         } else if totaltransferredfilessize.count == 1,
                   totalfilesize.count == 1,
                   numberoffiles.count == 1,
+                  filestransferred.count == 1,
+                  numberofcreatedfiles.count == 1,
+                  numberofdeletedfiles.count == 1,
                   version3ofrsync {
             
             stringnumbersonly = StringNumbersOnly(result: result,
