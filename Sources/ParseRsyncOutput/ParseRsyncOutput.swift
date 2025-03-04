@@ -96,58 +96,6 @@ public final class ParseRsyncOutput {
         if let numbersonly {
             stats = stats(true, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
         }
-        
-        /*
-        guard stringnumbersonly.filestransferred.count > 0 else { return }
-        guard stringnumbersonly.totaltransferredfilessize.count > 0 else { return }
-        guard stringnumbersonly.totalfilesize.count > 0 else { return }
-        guard stringnumbersonly.numberoffiles.count > 0 else { return }
-        
-        guard stringnumbersonly.numberofcreatedfiles.count > 0 else { return }
-        guard stringnumbersonly.numberofdeletedfiles.count > 0 else { return }
-        
-        // Ver3 of rsync adds "," as 1000 mark, must replace it and then split numbers into components
-        let filestransferred = stringnumbersonly.filestransferred[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let totaltransferredfilessize = stringnumbersonly.totaltransferredfilessize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let totalfilesize = stringnumbersonly.totalfilesize[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let numberoffiles = stringnumbersonly.numberoffiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let numberofcreatedfiles = stringnumbersonly.numberofcreatedfiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        let numberofdeletedfiles = stringnumbersonly.numberofdeletedfiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        
-        // (1) ["Number", "of", "regular", "files", "transferred:", "6,846"]
-        // (2) ["Total", "transferred", "file", "size:", "24,788,299", "bytes"]
-        // (3) ["Number", "of", "files:", "7,192", "(reg:", "6,846", "dir:", "346", "link:", "1)"]
-        // (4) ["Total", "file", "size:", "24,788,299", "bytes"]
-        // The
-        // (5) ["Number", "of", "created", "files:", "7,191", "(reg:", "6,846", "dir:", "346)"]
-        // (6) ["Number", "of", "deleted", "files:", "0"]
-        /* The parantes in "346)" is removed below
-         (3) Number of files: 7,192 (reg: 6,846, dir: 346)
-         (5) Number of created files: 7,191 (reg: 6,846, dir: 345)
-         (6) Number of deleted files: 0
-         (1) Number of regular files transferred: 6,846
-         (4) Total file size: 24,788,299 bytes
-         (2) Total transferred file size: 24,788,299 bytes
-         Literal data: 0 bytes
-         Matched data: 0 bytes
-         File list size: 0
-         File list generation time: 0.003 seconds
-         File list transfer time: 0.000 seconds
-         Total bytes sent: 394,304
-         Total bytes received: 22,226
-         */
-        if filestransferred.count > 5 { my_filestransferred = Int(filestransferred[5]) } else { my_filestransferred = 0 }
-        if totaltransferredfilessize.count > 4 { my_totaltransferredfilessize = Double(totaltransferredfilessize[4]) } else { my_totaltransferredfilessize = 0 }
-        if totalfilesize.count > 3 { my_totalfilesize = Double(totalfilesize[3]) } else { my_totalfilesize = 0 }
-        if numberoffiles.count > 5 { my_numberoffiles = Int(numberoffiles[5]) } else { my_numberoffiles = 0 }
-        if numberoffiles.count > 7 {
-            my_totaldirectories = Int(numberoffiles[7].replacingOccurrences(of: ")", with: ""))
-        } else {
-            my_totaldirectories = 0
-        }
-        if numberofcreatedfiles.count > 4 { my_numberofcreatedfiles = Int(numberofcreatedfiles[4]) } else { my_numberofcreatedfiles = 0 }
-        if numberofdeletedfiles.count > 4 { my_numberofdeletedfiles = Int(numberofdeletedfiles[4]) } else { my_numberofdeletedfiles = 0 }
-        */
     }
 
     public func rsyncver2(stringnumbersonly: StringNumbersOnly) {
@@ -173,54 +121,6 @@ public final class ParseRsyncOutput {
         if let numbersonly {
             stats = stats(true, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
         }
-       
-        /*
-        guard stringnumbersonly.filestransferred.count > 0 else { return }
-        guard stringnumbersonly.totaltransferredfilessize.count > 0 else { return }
-        guard stringnumbersonly.totalfilesize.count > 0 else { return }
-        guard stringnumbersonly.numberoffiles.count > 0 else { return }
-        
-        let filestransferred = stringnumbersonly.filestransferred[0].components(separatedBy: " ")
-        let totaltransferredfilessize = stringnumbersonly.totaltransferredfilessize[0].components(separatedBy: " ")
-        let totalfilesize = stringnumbersonly.totalfilesize[0].components(separatedBy: " ")
-        let numberoffiles = stringnumbersonly.numberoffiles[0].components(separatedBy: " ")
-        */
-        // (1) ["Number", "of", "files", "transferred:", "6846"]
-        // (2) ["Total", "transferred", "file", "size:", "24788299", "bytes"]
-        // (3) ["Number", "of", "files:", "7192"]
-        // (4) ["Total", "file", "size:", "24788299", "bytes"]
-        /*
-         (3) Number of files: 7192
-         (1) Number of files transferred: 6846
-         (4) Total file size: 24788299 bytes
-         (2) Total transferred file size: 24788299 bytes
-         Literal data: 0 bytes
-         Matched data: 0 bytes
-         File list size: 336861
-         File list generation time: 0.052 seconds
-         File list transfer time: 0.000 seconds
-         Total bytes sent: 380178
-         Total bytes received: 43172
-        
-        if filestransferred.count > 4 { my_filestransferred = Int(filestransferred[4]) } else { my_filestransferred = 0 }
-        if totaltransferredfilessize.count > 4 { my_totaltransferredfilessize = Double(totaltransferredfilessize[4]) } else { my_totaltransferredfilessize = 0 }
-        if totalfilesize.count > 3 { my_totalfilesize = Double(totalfilesize[3]) } else { my_totalfilesize = 0 }
-        if numberoffiles.count > 3 { my_numberoffiles = Int(numberoffiles[3]) } else { my_numberoffiles = 0 }
-        
-        numbersonly = NumbersOnly(numberoffiles: my_numberoffiles ?? 0,
-                                  totaldirectories: 0,
-                                  totalfilesize: my_totalfilesize ?? 0,
-                                  filestransferred: my_filestransferred ?? 0,
-                                  totaltransferredfilessize: my_totaltransferredfilessize ?? 0,
-                                  numberofcreatedfiles: 0,
-                                  numberofdeletedfiles: 0)
-         
-         if let numbersonly {
-             stats = stats(false, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
-         }
-         */
-        
-        
     }
 
     public func stats(_ version3ofrsync: Bool,
