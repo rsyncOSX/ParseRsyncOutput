@@ -66,16 +66,38 @@ public final class ParseRsyncOutput {
 
     public func rsyncver3(stringnumbersonly: StringNumbersOnly) {
        
-        var my_filestransferred: Int?
-        var my_totaltransferredfilessize: Double?
-        var my_totalfilesize: Double?
-        var my_numberoffiles: Int?
-       
-        var my_numberofcreatedfiles: Int?
-        var my_numberofdeletedfiles: Int?
+        var my_filestransferred: [Int]?
+        var my_totaltransferredfilessize: [Double]?
+        var my_totalfilesize: [Double]?
+        var my_numberoffiles: [Int]?
+        var my_numberofcreatedfiles: [Int]?
+        var my_numberofdeletedfiles: [Int]?
+        var my_totaldirectories: [Int]?
         
-        var my_totaldirectories: Int?
-
+        my_filestransferred = returnIntNumber(stringnumbersonly.filestransferred[0])
+        my_totaltransferredfilessize = returnDoubleNumber(stringnumbersonly.totaltransferredfilessize[0])
+        
+        my_totalfilesize = returnDoubleNumber(stringnumbersonly.totalfilesize[0])
+        my_numberoffiles = returnIntNumber(stringnumbersonly.numberoffiles[0])
+       
+        my_numberofcreatedfiles = returnIntNumber(stringnumbersonly.numberofcreatedfiles[0])
+        my_numberofdeletedfiles = returnIntNumber(stringnumbersonly.numberofdeletedfiles[0])
+        
+        my_totaldirectories = returnIntNumber(stringnumbersonly.numberoffiles[0])
+        
+        
+        numbersonly = NumbersOnly(numberoffiles: my_numberoffiles?[0] ?? 0,
+                                  totaldirectories: my_totaldirectories?[0] ?? 0,
+                                  totalfilesize: my_totalfilesize?[0] ?? 0,
+                                  filestransferred: my_filestransferred?[0] ?? 0,
+                                  totaltransferredfilessize: my_totaltransferredfilessize?[0] ?? 0,
+                                  numberofcreatedfiles: my_numberofcreatedfiles?[0] ?? 0,
+                                  numberofdeletedfiles: my_numberofdeletedfiles?[0] ?? 0)
+        if let numbersonly {
+            stats = stats(true, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
+        }
+        
+        /*
         guard stringnumbersonly.filestransferred.count > 0 else { return }
         guard stringnumbersonly.totaltransferredfilessize.count > 0 else { return }
         guard stringnumbersonly.totalfilesize.count > 0 else { return }
@@ -125,17 +147,7 @@ public final class ParseRsyncOutput {
         }
         if numberofcreatedfiles.count > 4 { my_numberofcreatedfiles = Int(numberofcreatedfiles[4]) } else { my_numberofcreatedfiles = 0 }
         if numberofdeletedfiles.count > 4 { my_numberofdeletedfiles = Int(numberofdeletedfiles[4]) } else { my_numberofdeletedfiles = 0 }
-        
-        numbersonly = NumbersOnly(numberoffiles: my_numberoffiles ?? 0,
-                                  totaldirectories: my_totaldirectories ?? 0,
-                                  totalfilesize: my_totalfilesize ?? 0,
-                                  filestransferred: my_filestransferred ?? 0,
-                                  totaltransferredfilessize: my_totaltransferredfilessize ?? 0,
-                                  numberofcreatedfiles: my_numberofcreatedfiles ?? 0,
-                                  numberofdeletedfiles: my_numberofdeletedfiles ?? 0)
-        if let numbersonly {
-            stats = stats(true, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
-        }
+        */
     }
 
     public func rsyncver2(stringnumbersonly: StringNumbersOnly) {
@@ -215,12 +227,24 @@ public final class ParseRsyncOutput {
             " MB in " + String(format: "%.2f", seconds) + " seconds"
     }
     
-    public func returnnumber( _ input: String) -> [Int] {
+    public func returnIntNumber( _ input: String) -> [Int] {
         var numbers: [Int] = []
-        let test1 = input.replacingOccurrences(of: ",", with: "")
-        let stringArray = test1.components(separatedBy: CharacterSet.decimalDigits.inverted)
+        let str = input.replacingOccurrences(of: ",", with: "")
+        let stringArray = str.components(separatedBy: CharacterSet.decimalDigits.inverted)
         for item in stringArray {
             if let number = Int(item) {
+                numbers.append(number)
+            }
+        }
+        return numbers
+    }
+    
+    public func returnDoubleNumber( _ input: String) -> [Double] {
+        var numbers: [Double] = []
+        let str = input.replacingOccurrences(of: ",", with: "")
+        let stringArray = str.components(separatedBy: CharacterSet.decimalDigits.inverted)
+        for item in stringArray {
+            if let number = Double(item) {
                 numbers.append(number)
             }
         }
@@ -278,12 +302,6 @@ public final class ParseRsyncOutput {
                                                   numberofcreatedfiles: numberofcreatedfiles,
                                                   numberofdeletedfiles: numberofdeletedfiles)
 
-            print(returnnumber(filestransferred[0]))
-            print(returnnumber(totaltransferredfilessize[0]))
-            print(returnnumber(totalfilesize[0]))
-            print(returnnumber(numberoffiles[0]))
-            if numberofcreatedfiles.count > 0 { print(returnnumber(numberofcreatedfiles[0])) }
-            if numberofdeletedfiles.count > 0 { print(returnnumber(numberofdeletedfiles[0])) }
             
             if version3ofrsync, let stringnumbersonly {
                 rsyncver3(stringnumbersonly: stringnumbersonly)
