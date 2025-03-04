@@ -54,7 +54,7 @@ public final class ParseRsyncOutput {
     public var formatted_totaldirectories: String {
         NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totaldirectories ?? 0), number: NumberFormatter.Style.decimal)
     }
-    public var formatted_totalNumber_totalDirs: String {
+    public var formatted_numberoffiles_totaldirectories: String {
         NumberFormatter.localizedString(from: NSNumber(value: (numbersonly?.totaldirectories ?? 0) + (numbersonly?.numberoffiles ?? 0)), number: NumberFormatter.Style.decimal)
     }
     public var formatted_numberofcreatedfiles: String {
