@@ -91,15 +91,16 @@ public final class ParseRsyncOutput {
         let numberoffiles = stringnumbersonly.numberoffiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
         let numberofcreatedfiles = stringnumbersonly.numberofcreatedfiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
         let numberofdeletedfiles = stringnumbersonly.numberofdeletedfiles[0].replacingOccurrences(of: ",", with: "").components(separatedBy: " ")
-        
-        // (1) ["Number", "of", "regular", "files", "transferred:", "6,846"]
-        // (2) ["Total", "transferred", "file", "size:", "24,788,299", "bytes"]
-        // (3) ["Number", "of", "files:", "7,192", "(reg:", "6,846", "dir:", "346", "link:", "1)"]
-        // (4) ["Total", "file", "size:", "24,788,299", "bytes"]
-        // The
-        // (5) ["Number", "of", "created", "files:", "7,191", "(reg:", "6,846", "dir:", "346)"]
-        // (6) ["Number", "of", "deleted", "files:", "0"]
-        /* The parantes in "346)" is removed below
+        /*
+         (1) ["Number", "of", "regular", "files", "transferred:", "6,846"]
+         (2) ["Total", "transferred", "file", "size:", "24,788,299", "bytes"]
+         (3) ["Number", "of", "files:", "7,192", "(reg:", "6,846", "dir:", "346", "link:", "1)"]
+         (4) ["Total", "file", "size:", "24,788,299", "bytes"]
+         (5) ["Number", "of", "created", "files:", "7,191", "(reg:", "6,846", "dir:", "346)"]
+         (6) ["Number", "of", "deleted", "files:", "0"]
+         
+         The parantes in "346)" is removed below
+         
          (3) Number of files: 7,192 (reg: 6,846, dir: 346)
          (5) Number of created files: 7,191 (reg: 6,846, dir: 345)
          (6) Number of deleted files: 0
@@ -154,12 +155,12 @@ public final class ParseRsyncOutput {
         let totaltransferredfilessize = stringnumbersonly.totaltransferredfilessize[0].components(separatedBy: " ")
         let totalfilesize = stringnumbersonly.totalfilesize[0].components(separatedBy: " ")
         let numberoffiles = stringnumbersonly.numberoffiles[0].components(separatedBy: " ")
-        
-        // (1) ["Number", "of", "files", "transferred:", "6846"]
-        // (2) ["Total", "transferred", "file", "size:", "24788299", "bytes"]
-        // (3) ["Number", "of", "files:", "7192"]
-        // (4) ["Total", "file", "size:", "24788299", "bytes"]
         /*
+         (1) ["Number", "of", "files", "transferred:", "6846"]
+         (2) ["Total", "transferred", "file", "size:", "24788299", "bytes"]
+         (3) ["Number", "of", "files:", "7192"]
+         (4) ["Total", "file", "size:", "24788299", "bytes"]
+        
          (3) Number of files: 7192
          (1) Number of files transferred: 6846
          (4) Total file size: 24788299 bytes
