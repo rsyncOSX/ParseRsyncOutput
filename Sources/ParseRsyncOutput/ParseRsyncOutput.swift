@@ -88,8 +88,8 @@ public final class ParseRsyncOutput {
         guard my_filestransferred?.count ?? 0 > 0 else { return }
         guard my_totaltransferredfilessize?.count ?? 0 > 0 else { return }
         guard my_totalfilesize?.count ?? 0 > 0 else { return }
-        guard my_numberoffiles?.count ?? 0 > 0 else { return }
-        guard my_numberofcreatedfiles?.count ?? 0 > 0 else { return }
+        guard my_numberoffiles?.count ?? 0 > 2 else { return }
+        guard my_numberofcreatedfiles?.count ?? 0 > 2 else { return }
         guard my_numberofdeletedfiles?.count ?? 0 > 0 else { return }
         guard my_totaldirectories?.count ?? 0 > 0 else { return }
        
