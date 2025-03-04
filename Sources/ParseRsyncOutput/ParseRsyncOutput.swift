@@ -212,8 +212,12 @@ public final class ParseRsyncOutput {
         let numberofdeletedfiles = preparedoutputfromrsync.compactMap {
             $0.contains("Number of deleted files:") ? $0 : nil
         }
-                
-        if filestransferred.count == 1, totaltransferredfilessize.count == 1, totalfilesize.count == 1, numberoffiles.count == 1 {
+        
+        if filestransferred.count == 1,
+           totaltransferredfilessize.count == 1,
+           totalfilesize.count == 1,
+           numberoffiles.count == 1,
+           version3ofrsync == false {
             
             stringnumbersonly = StringNumbersOnly(result: result,
                                                   filestransferred: filestransferred,
@@ -222,12 +226,25 @@ public final class ParseRsyncOutput {
                                                   numberoffiles: numberoffiles,
                                                   numberofcreatedfiles: numberofcreatedfiles,
                                                   numberofdeletedfiles: numberofdeletedfiles)
-
             
-            if version3ofrsync, let stringnumbersonly {
-                rsyncver3(stringnumbersonly: stringnumbersonly)
-            } else if let stringnumbersonly {
+            if let stringnumbersonly {
                 rsyncver2(stringnumbersonly: stringnumbersonly)
+            }
+        } else if totaltransferredfilessize.count == 1,
+                  totalfilesize.count == 1,
+                  numberoffiles.count == 1,
+                  version3ofrsync {
+            
+            stringnumbersonly = StringNumbersOnly(result: result,
+                                                  filestransferred: filestransferred,
+                                                  totaltransferredfilessize: totaltransferredfilessize,
+                                                  totalfilesize: totalfilesize,
+                                                  numberoffiles: numberoffiles,
+                                                  numberofcreatedfiles: numberofcreatedfiles,
+                                                  numberofdeletedfiles: numberofdeletedfiles)
+            
+            if let stringnumbersonly {
+                rsyncver3(stringnumbersonly: stringnumbersonly)
             }
         }
     }
