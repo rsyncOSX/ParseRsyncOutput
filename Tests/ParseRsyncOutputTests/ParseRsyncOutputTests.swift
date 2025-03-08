@@ -97,7 +97,7 @@ import Testing
             #expect(parsersyncoutput.numbersonly?.totaldirectories == 346)
             #expect(parsersyncoutput.numbersonly?.numberoffiles == 6846)
             #expect(parsersyncoutput.numbersonly?.totalfilesize == 24788299.0)
-            #expect(parsersyncoutput.numbersonly?.datatosynchronize == false)
+            #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
         }
     }
 
@@ -114,7 +114,7 @@ import Testing
             #expect(parsersyncoutput.numbersonly?.totaldirectories == 0)
             #expect(parsersyncoutput.numbersonly?.numberoffiles == 7192)
             #expect(parsersyncoutput.numbersonly?.totalfilesize == 24788299.0)
-            #expect(parsersyncoutput.numbersonly?.datatosynchronize == false)
+            #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
         }
     }
 
@@ -131,7 +131,7 @@ import Testing
             #expect(parsersyncoutput.numbersonly?.totaldirectories == 0)
             #expect(parsersyncoutput.numbersonly?.numberoffiles == 7312)
             #expect(parsersyncoutput.numbersonly?.totalfilesize == 24929166.0)
-            #expect(parsersyncoutput.numbersonly?.datatosynchronize == false)
+            #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
         }
     }
 }
