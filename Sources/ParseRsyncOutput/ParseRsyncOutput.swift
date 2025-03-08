@@ -12,6 +12,7 @@ public struct NumbersOnly {
     public var totaltransferredfilessize: Double
     public var numberofcreatedfiles: Int
     public var numberofdeletedfiles: Int
+    public var datatosynchronize: Bool
 }
 
 @MainActor
@@ -75,6 +76,8 @@ public final class ParseRsyncOutput {
         var my_numberofdeletedfiles: Int?
         
         var my_totaldirectories: Int?
+        
+        var datatosynchronize: Bool = false
 
         guard stringnumbersonly.filestransferred.count > 0 else { return }
         guard stringnumbersonly.totaltransferredfilessize.count > 0 else { return }
@@ -127,13 +130,26 @@ public final class ParseRsyncOutput {
         if numberofcreatedfiles.count > 4 { my_numberofcreatedfiles = Int(numberofcreatedfiles[4]) } else { my_numberofcreatedfiles = 0 }
         if numberofdeletedfiles.count > 4 { my_numberofdeletedfiles = Int(numberofdeletedfiles[4]) } else { my_numberofdeletedfiles = 0 }
         
+        if let my_filestransferred, my_filestransferred > 0  {
+            datatosynchronize = true
+        }
+        
+        if let my_numberofcreatedfiles, my_numberofcreatedfiles > 0 {
+            datatosynchronize = true
+        }
+        
+        if let my_numberofdeletedfiles, my_numberofdeletedfiles > 0 {
+            datatosynchronize = true
+        }
+        
         numbersonly = NumbersOnly(numberoffiles: my_numberoffiles ?? 0,
                                   totaldirectories: my_totaldirectories ?? 0,
                                   totalfilesize: my_totalfilesize ?? 0,
                                   filestransferred: my_filestransferred ?? 0,
                                   totaltransferredfilessize: my_totaltransferredfilessize ?? 0,
                                   numberofcreatedfiles: my_numberofcreatedfiles ?? 0,
-                                  numberofdeletedfiles: my_numberofdeletedfiles ?? 0)
+                                  numberofdeletedfiles: my_numberofdeletedfiles ?? 0,
+                                  datatosynchronize: datatosynchronize)
         if let numbersonly {
             stats = stats(true, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
         }
@@ -145,6 +161,8 @@ public final class ParseRsyncOutput {
         var my_totaltransferredfilessize: Double?
         var my_totalfilesize: Double?
         var my_numberoffiles: Int?
+        
+        var datatosynchronize: Bool = false
         
         guard stringnumbersonly.filestransferred.count > 0 else { return }
         guard stringnumbersonly.totaltransferredfilessize.count > 0 else { return }
@@ -178,13 +196,18 @@ public final class ParseRsyncOutput {
         if totalfilesize.count > 3 { my_totalfilesize = Double(totalfilesize[3]) } else { my_totalfilesize = 0 }
         if numberoffiles.count > 3 { my_numberoffiles = Int(numberoffiles[3]) } else { my_numberoffiles = 0 }
         
+        if let my_filestransferred, my_filestransferred > 0  {
+            datatosynchronize = true
+        }
+        
         numbersonly = NumbersOnly(numberoffiles: my_numberoffiles ?? 0,
                                   totaldirectories: 0,
                                   totalfilesize: my_totalfilesize ?? 0,
                                   filestransferred: my_filestransferred ?? 0,
                                   totaltransferredfilessize: my_totaltransferredfilessize ?? 0,
                                   numberofcreatedfiles: 0,
-                                  numberofdeletedfiles: 0)
+                                  numberofdeletedfiles: 0,
+                                  datatosynchronize: datatosynchronize)
         
         if let numbersonly {
             stats = stats(false, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
