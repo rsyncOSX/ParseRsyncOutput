@@ -1,0 +1,92 @@
+sending incremental file list
+ParseRsyncOutput/.git/
+ParseRsyncOutput/.git/COMMIT_EDITMSG
+ParseRsyncOutput/.git/FETCH_HEAD
+ParseRsyncOutput/.git/HEAD
+ParseRsyncOutput/.git/ORIG_HEAD
+ParseRsyncOutput/.git/index
+ParseRsyncOutput/.git/logs/HEAD
+ParseRsyncOutput/.git/logs/refs/heads/NewMethodMaybe
+ParseRsyncOutput/.git/logs/refs/remotes/origin/HEAD
+ParseRsyncOutput/.git/logs/refs/remotes/origin/NewMethodMaybe
+ParseRsyncOutput/.git/objects/
+ParseRsyncOutput/.git/objects/01/
+ParseRsyncOutput/.git/objects/01/bc325c191517529d44116321549ef1d9afd068
+ParseRsyncOutput/.git/objects/24/
+ParseRsyncOutput/.git/objects/24/67b7132cefb589e16bbcfddeb4cd770f3d4aea
+ParseRsyncOutput/.git/objects/24/f8f5edd0de3fcef1fa268681bc833da1531e2b
+ParseRsyncOutput/.git/objects/2b/
+ParseRsyncOutput/.git/objects/2b/be91c28e8e1a8f5ca456c637e6812474be9ead
+ParseRsyncOutput/.git/objects/2c/
+ParseRsyncOutput/.git/objects/2c/838ec566021be3807762bd57f5998de743831f
+ParseRsyncOutput/.git/objects/37/
+ParseRsyncOutput/.git/objects/37/a666e65f7ea2812195288070ecd0e0f17b6a33
+ParseRsyncOutput/.git/objects/43/
+ParseRsyncOutput/.git/objects/43/43fa198ee40fcbe49b8979d13733ad9d1f8cc8
+ParseRsyncOutput/.git/objects/45/
+ParseRsyncOutput/.git/objects/45/8aee9e42e613e3120acdb3457b2e2ff40d54d4
+ParseRsyncOutput/.git/objects/4a/
+ParseRsyncOutput/.git/objects/4a/1d0e8a2ebc35fbbc6c2e2cde56f508b27b9c85
+ParseRsyncOutput/.git/objects/4c/
+ParseRsyncOutput/.git/objects/4c/d97ecdec097827e78dee7b02bd2bee9be25c37
+ParseRsyncOutput/.git/objects/4d/
+ParseRsyncOutput/.git/objects/4d/551e6f88f35022cb0263e06c70c25f93c53f18
+ParseRsyncOutput/.git/objects/60/21c5c6641b808338e0fd4aee093f99d52ef0f8
+ParseRsyncOutput/.git/objects/65/40b2eff5db9634aa0d8d6277715783b611ece1
+ParseRsyncOutput/.git/objects/6a/
+ParseRsyncOutput/.git/objects/6a/bb5b46566802ffa6618e0fae7d7bf2cea7f17c
+ParseRsyncOutput/.git/objects/71/
+ParseRsyncOutput/.git/objects/71/c5fd503cbd66cb2cc45af883658ef4871f1aac
+ParseRsyncOutput/.git/objects/73/6d9ee7657efd42f5c7015f2cf2105081211d32
+ParseRsyncOutput/.git/objects/95/
+ParseRsyncOutput/.git/objects/95/bd7bc3006ceeb9c7d27333486f213bd1ec49d0
+ParseRsyncOutput/.git/objects/96/
+ParseRsyncOutput/.git/objects/96/2af58d14978360b3df37760aaebce6972bb244
+ParseRsyncOutput/.git/objects/9c/
+ParseRsyncOutput/.git/objects/9c/f6e13d9a2c7e3ce2a3ef899cb8261abcfe730a
+ParseRsyncOutput/.git/objects/a7/
+ParseRsyncOutput/.git/objects/a7/06c84681f1305ad3de4332646150c04f48c57f
+ParseRsyncOutput/.git/refs/heads/
+ParseRsyncOutput/.git/refs/heads/NewMethodMaybe
+ParseRsyncOutput/.git/refs/remotes/origin/
+ParseRsyncOutput/.git/refs/remotes/origin/HEAD
+ParseRsyncOutput/.git/refs/remotes/origin/NewMethodMaybe
+ParseRsyncOutput/.swiftpm/xcode/package.xcworkspace/xcuserdata/thomas.xcuserdatad/
+ParseRsyncOutput/.swiftpm/xcode/package.xcworkspace/xcuserdata/thomas.xcuserdatad/UserInterfaceState.xcuserstate
+ParseRsyncOutput/.swiftpm/xcode/xcuserdata/thomas.xcuserdatad/xcdebugger/
+ParseRsyncOutput/.swiftpm/xcode/xcuserdata/thomas.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
+ParseRsyncOutput/Sources/ParseRsyncOutput/
+ParseRsyncOutput/Sources/ParseRsyncOutput/ParseRsyncOutput.swift
+ParseRsyncOutput/Tests/
+ParseRsyncOutput/Tests/ParseRsyncOutputTests/
+ParseRsyncOutput/Tests/ParseRsyncOutputTests/ParseRsyncOutputTests.swift
+mydocsy/.git/FETCH_HEAD
+mydocsy/.git/logs/refs/remotes/origin/HEAD
+mydocsy/.git/logs/refs/remotes/origin/main
+mydocsy/.git/objects/
+mydocsy/.git/objects/5e/
+mydocsy/.git/objects/5e/e320c6cb3e12e8d25b2bafc770dfe22658e835
+mydocsy/.git/objects/76/
+mydocsy/.git/objects/76/e62739732f061d7417095f716974c8ca940d6f
+mydocsy/.git/objects/84/
+mydocsy/.git/objects/84/a0216ee74693a3f8da5cf18e5fe7a0b5d58628
+mydocsy/.git/refs/remotes/origin/
+mydocsy/.git/refs/remotes/origin/HEAD
+mydocsy/.git/refs/remotes/origin/main
+
+Number of files: 60,110 (reg: 52,854, dir: 7,145, link: 111)
+Number of created files: 24 (reg: 20, dir: 4)
+Number of deleted files: 0
+Number of regular files transferred: 44
+Total file size: 870,769,866 bytes
+Total transferred file size: 254,016 bytes
+Literal data: 0 bytes
+Matched data: 0 bytes
+File list size: 0
+File list generation time: 0.003 seconds
+File list transfer time: 0.000 seconds
+Total bytes sent: 1,814,402
+Total bytes received: 8,422
+
+sent 1,814,402 bytes  received 8,422 bytes  1,215,216.00 bytes/sec
+total size is 870,769,866  speedup is 477.70 (DRY RUN)
