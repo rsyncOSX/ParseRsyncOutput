@@ -76,17 +76,26 @@ public final class ParseRsyncOutput {
         var my_totaldirectories: Int?
         var datatosynchronize: Bool = false
         
-        // returnIntNumber and returnDoubleNumber always returns one value. If it fails
+        // returnIntNumber and returnDoubleNumber always returns at least one value. If it fails
         // it returns a [0]
         
         my_filestransferred = returnIntNumber(stringnumbersonly.filestransferred[0])
         my_totaltransferredfilessize = returnDoubleNumber(stringnumbersonly.totaltransferredfilessize[0])
         my_totalfilesize = returnDoubleNumber(stringnumbersonly.totalfilesize[0])
-        my_numberoffiles = returnIntNumber(stringnumbersonly.numberoffiles[0])[1]
+        let tempfiles = returnIntNumber(stringnumbersonly.numberoffiles[0])
+        if tempfiles.count > 1 {
+            my_numberoffiles = returnIntNumber(stringnumbersonly.numberoffiles[0])[1]
+        } else {
+            my_numberoffiles = 0
+        }
         my_numberofcreatedfiles = returnIntNumber(stringnumbersonly.numberofcreatedfiles[0])
         my_numberofdeletedfiles = returnIntNumber(stringnumbersonly.numberofdeletedfiles[0])
-        my_totaldirectories = returnIntNumber(stringnumbersonly.numberoffiles[0])[2]
-        
+        let directories = returnIntNumber(stringnumbersonly.numberoffiles[0])
+        if directories.count > 2 {
+            my_totaldirectories = returnIntNumber(stringnumbersonly.numberoffiles[0])[2]
+        } else {
+            my_totaldirectories = 0
+        }
         guard my_filestransferred?.count ?? 0 > 0 else { return }
         guard my_totaltransferredfilessize?.count ?? 0 > 0 else { return }
         guard my_totalfilesize?.count ?? 0 > 0 else { return }
@@ -129,7 +138,7 @@ public final class ParseRsyncOutput {
         var my_numberoffiles: [Int]?
         var datatosynchronize: Bool = false
         
-        // returnIntNumber and returnDoubleNumber always returns one value. If it fails
+        // returnIntNumber and returnDoubleNumber always returns at least one value. If it fails
         // it returns a [0]
         
         my_filestransferred = returnIntNumber(stringnumbersonly.filestransferred[0])
