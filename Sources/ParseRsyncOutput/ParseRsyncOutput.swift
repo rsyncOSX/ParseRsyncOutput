@@ -3,7 +3,6 @@
 
 import Foundation
 
-@MainActor
 public struct NumbersOnly {
     public var numberoffiles: Int
     public var totaldirectories: Int
@@ -15,7 +14,6 @@ public struct NumbersOnly {
     public var datatosynchronize: Bool
 }
 
-@MainActor
 public struct StringNumbersOnly {
     // Second last String in Array rsync output of how much in what time
     public var result: String
@@ -37,7 +35,6 @@ public struct StringNumbersOnly {
     public var numberofdeletedfiles: [String]
 }
 
-@MainActor
 public final class ParseRsyncOutput {
     public var stringnumbersonly: StringNumbersOnly?
     public var numbersonly: NumbersOnly?
@@ -194,25 +191,6 @@ public final class ParseRsyncOutput {
             " MB in " + String(format: "%.2f", seconds) + " seconds"
     }
     
-/*
-    public func returnNumber<T>( _ input: String) -> [T]? {
-        var numbers: [T] = []
-        let str = input.replacingOccurrences(of: ",", with: "")
-        let stringArray = str.components(separatedBy: CharacterSet.decimalDigits.inverted)
-        for item in stringArray where item.isEmpty == false {
-            if let number = (item) as? T {
-                numbers.append(number)
-            }
-        }
-        if numbers.count == 0 {
-            return nil
-        } else {
-            return numbers
-        }
-       
-    }
-    
-*/
     public func returnIntNumber( _ input: String) -> [Int] {
         var numbers: [Int] = []
         let str = input.replacingOccurrences(of: ",", with: "")

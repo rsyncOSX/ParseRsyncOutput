@@ -3,7 +3,6 @@
 import Foundation
 import Testing
 
-@MainActor
 @Suite final class TestParseRsyncOutput {
     var parsersyncoutput: ParseRsyncOutput?
 
