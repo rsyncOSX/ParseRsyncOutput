@@ -3663,15 +3663,15 @@ versionRsyncUI/README.md
 versionRsyncUI/versionRsyncUIsonoma.json
 Number of files: 3661
 Number of files transferred: 3301
-Total file size: 27747677 B
-Total transferred file size: 27747677 B
-Unmatched data: 0 B
-Matched data: 0 B
-File list size: 273290 B
+Total file size: 27747677
+Total transferred file size: 27747677
+Unmatched data: 0
+Matched data: 0
+File list size: 273290
 File list generation time: 0.027 seconds
 File list transfer time: 0.062 seconds
-Total sent: 295421 B
-Total received: 21986 B
+Total sent: 295421
+Total received: 21986
 
 sent 295421 bytes  received 21986 bytes  1823130 bytes/sec
 total size is 27747677  speedup is 87.42

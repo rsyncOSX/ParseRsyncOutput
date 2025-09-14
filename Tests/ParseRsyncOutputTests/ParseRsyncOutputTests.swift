@@ -59,6 +59,29 @@ import Testing
         }
         return nil
     }
+    
+    func readloggfileV3_ver3() -> [String]? {
+        if let homepath = userHomeDirectoryURLPath {
+            let ver3 = "GitHub/ParseRsyncOutput/TestData/ver3_ver3.txt"
+            let fileURL = homepath.appendingPathComponent(ver3)
+
+            do {
+                let data = try Data(contentsOf: fileURL)
+                let filedata = String(data: data, encoding: .utf8)
+                var logarray = [String]()
+                if let line = filedata?.components(separatedBy: .newlines) {
+                    for i in 0 ..< line.count {
+                        logarray.append(line[i])
+                    }
+                }
+                return logarray
+            } catch {
+                return nil
+            }
+        }
+        return nil
+    }
+    
     func readloggfileV2() -> [String]? {
         if let homepath = userHomeDirectoryURLPath {
             let ver2 = "GitHub/ParseRsyncOutput/TestData/ver2.txt"
@@ -124,8 +147,30 @@ import Testing
         }
         return nil
     }
+    
+    func readopenrsyncfile_ver3() -> [String]? {
+        if let homepath = userHomeDirectoryURLPath {
+            let ver2 = "GitHub/ParseRsyncOutput/TestData/openrsync_ver3.txt"
+            let fileURL = homepath.appendingPathComponent(ver2)
 
-    @Test func executetestV3() {
+            do {
+                let data = try Data(contentsOf: fileURL)
+                let filedata = String(data: data, encoding: .utf8)
+                var logarray = [String]()
+                if let line = filedata?.components(separatedBy: .newlines) {
+                    for i in 0 ..< line.count {
+                        logarray.append(line[i])
+                    }
+                }
+                return logarray
+            } catch {
+                return nil
+            }
+        }
+        return nil
+    }
+    
+    @Test func executetestV4() {
         let array = readloggfileV3()
         if let array  {
             
@@ -199,6 +244,25 @@ import Testing
         }
     }
     
+    @Test func executetestV3_ver3() {
+        let array = readloggfileV3_ver3()
+        if let array  {
+            
+            let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
+            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, true)
+            
+            #expect(parsersyncoutput.stats == "3301 files : 0.19 MB in 1.42 seconds")
+            #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 27747677.0)
+            #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
+            #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 3661)
+            #expect(parsersyncoutput.numbersonly?.totaldirectories == 360)
+            #expect(parsersyncoutput.numbersonly?.numberoffiles == 3301)
+            #expect(parsersyncoutput.numbersonly?.totalfilesize == 27747677.0)
+            #expect(parsersyncoutput.numbersonly?.filestransferred == 3301)
+            #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+        }
+    }
+    
     @Test func executetestopenrsync_ver2() {
         let array = readopenrsyncfile_ver2()
         if let array  {
@@ -213,6 +277,24 @@ import Testing
             #expect(parsersyncoutput.numbersonly?.numberoffiles == 60110)
             #expect(parsersyncoutput.numbersonly?.totalfilesize == 870769866.0)
             #expect(parsersyncoutput.numbersonly?.filestransferred == 44)
+            #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+        }
+    }
+    
+    @Test func executetestopenrsync_ver3() {
+        let array = readopenrsyncfile_ver3()
+        if let array  {
+            
+            let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
+            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, false)
+            #expect(parsersyncoutput.stats == "3301 files : 0.30 MB in 0.16 seconds")
+            #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 27747677.0)
+            #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
+            #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
+            #expect(parsersyncoutput.numbersonly?.totaldirectories == 0)
+            #expect(parsersyncoutput.numbersonly?.numberoffiles == 3661)
+            #expect(parsersyncoutput.numbersonly?.totalfilesize == 27747677.0)
+            #expect(parsersyncoutput.numbersonly?.filestransferred == 3301)
             #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
         }
     }
