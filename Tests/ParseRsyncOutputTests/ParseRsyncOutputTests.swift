@@ -170,7 +170,7 @@ import Testing
         return nil
     }
     
-    @Test func executetestV4() {
+    @Test func executetestV3() {
         let array = readloggfileV3()
         if let array  {
             
