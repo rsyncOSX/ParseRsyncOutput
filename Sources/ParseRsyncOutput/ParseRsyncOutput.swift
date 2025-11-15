@@ -65,7 +65,11 @@ public final class ParseRsyncOutput {
     }
 
     public func rsyncver3(stringnumbersonly: StringNumbersOnly) {
-        Logger.process.info("ParseRsyncOutput: rsyncver3() MAIN THREAD: \(Thread.isMain, privacy: .public) but on \(Thread.current, privacy: .public)")
+        if Thread.checkIsMainThread() {
+            Logger.process.info("ParseRsyncOutput: rsyncver3() Running on main thread")
+        } else {
+            Logger.process.info("ParseRsyncOutput: rsyncver3() NOT on main thread, currently on \(Thread.current, privacy: .public)")
+        }
         var my_filestransferred: [Int]?
         var my_totaltransferredfilessize: [Double]?
         var my_totalfilesize: [Double]?
@@ -130,7 +134,11 @@ public final class ParseRsyncOutput {
     }
 
     public func rsyncver2(stringnumbersonly: StringNumbersOnly) {
-        Logger.process.info("ParseRsyncOutput: rsyncver2() MAIN THREAD: \(Thread.isMain, privacy: .public) but on \(Thread.current, privacy: .public)")
+        if Thread.checkIsMainThread() {
+            Logger.process.info("ParseRsyncOutput: rsyncver2() Running on main thread")
+        } else {
+            Logger.process.info("ParseRsyncOutput: rsyncver2() NOT on main thread, currently on \(Thread.current, privacy: .public)")
+        }
         var my_filestransferred: [Int]?
         var my_totaltransferredfilessize: [Double]?
         var my_totalfilesize: [Double]?
@@ -171,7 +179,11 @@ public final class ParseRsyncOutput {
     public func stats(_ version3ofrsync: Bool,
                       stringnumbersonly: StringNumbersOnly,
                       numbersonly: NumbersOnly) -> String {
-        Logger.process.info("ParseRsyncOutput: stats() MAIN THREAD: \(Thread.isMain, privacy: .public) but on \(Thread.current, privacy: .public)")
+        if Thread.checkIsMainThread() {
+            Logger.process.info("ParseRsyncOutput: stats() Running on main thread")
+        } else {
+            Logger.process.info("ParseRsyncOutput: stats() NOT on main thread, currently on \(Thread.current, privacy: .public)")
+        }
         var parts: [String]?
         if version3ofrsync {
             let newmessage = stringnumbersonly.result.replacingOccurrences(of: ",", with: "")
@@ -195,7 +207,11 @@ public final class ParseRsyncOutput {
     }
     
     public func returnIntNumber( _ input: String) -> [Int] {
-        Logger.process.info("ParseRsyncOutput: returnIntNumber() MAIN THREAD: \(Thread.isMain, privacy: .public) but on \(Thread.current, privacy: .public)")
+        if Thread.checkIsMainThread() {
+            Logger.process.info("ParseRsyncOutput: returnIntNumber() Running on main thread")
+        } else {
+            Logger.process.info("ParseRsyncOutput: returnIntNumber() NOT on main thread, currently on \(Thread.current, privacy: .public)")
+        }
         var numbers: [Int] = []
         let str = input.replacingOccurrences(of: ",", with: "")
         let stringArray = str.components(separatedBy: CharacterSet.decimalDigits.inverted).compactMap { $0.isEmpty == true ? nil : $0 }
@@ -214,7 +230,11 @@ public final class ParseRsyncOutput {
     }
     
     public func returnDoubleNumber( _ input: String) -> [Double] {
-        Logger.process.info("ParseRsyncOutput: returnDoubleNumber() MAIN THREAD: \(Thread.isMain, privacy: .public) but on \(Thread.current, privacy: .public)")
+        if Thread.checkIsMainThread() {
+            Logger.process.info("ParseRsyncOutput: returnDoubleNumber() Running on main thread")
+        } else {
+            Logger.process.info("ParseRsyncOutput: returnDoubleNumber() NOT on main thread, currently on \(Thread.current, privacy: .public)")
+        }
         var numbers: [Double] = []
         let str = input.replacingOccurrences(of: ",", with: "")
         let stringArray = str.components(separatedBy: CharacterSet.decimalDigits.inverted).compactMap { $0.isEmpty == true ? nil : $0 }
