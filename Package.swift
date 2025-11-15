@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "ParseRsyncOutput",
+    platforms: [.macOS(.v14)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
@@ -23,3 +24,12 @@ let package = Package(
         )
     ]
 )
+
+for target in package.targets {
+  var settings = target.swiftSettings ?? []
+  settings.append(contentsOf: [
+    .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+    .enableUpcomingFeature("InferIsolatedConformances")
+  ])
+  target.swiftSettings = settings
+}
