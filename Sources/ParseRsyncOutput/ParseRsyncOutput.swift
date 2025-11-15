@@ -196,7 +196,6 @@ public final class ParseRsyncOutput {
     }
     
     public func returnIntNumber( _ input: String) -> [Int] {
-        Logger.process.debugtthreadonly("ParseRsyncOutput: returnIntNumber()")
         var numbers: [Int] = []
         let str = input.replacingOccurrences(of: ",", with: "")
         let stringArray = str.components(separatedBy: CharacterSet.decimalDigits.inverted).compactMap { $0.isEmpty == true ? nil : $0 }
@@ -215,7 +214,6 @@ public final class ParseRsyncOutput {
     }
     
     public func returnDoubleNumber( _ input: String) -> [Double] {
-        Logger.process.debugtthreadonly("ParseRsyncOutput: returnDoubleNumber()")
         var numbers: [Double] = []
         let str = input.replacingOccurrences(of: ",", with: "")
         let stringArray = str.components(separatedBy: CharacterSet.decimalDigits.inverted).compactMap { $0.isEmpty == true ? nil : $0 }
