@@ -446,23 +446,29 @@ import Testing
     }
     
     @Test("Parse malformed bytes/sec line")
-    func testMalformedBytesSecLine() async throws {
-        let output = [
-            "some random text without proper format",
-            "Number of files: 100 (reg: 80, dir: 20)",
-            "Number of regular files transferred: 5",
-            "Total file size: 1,000,000 bytes",
-            "Total transferred file size: 50,000 bytes",
-            "Number of created files: 5",
-            "Number of deleted files: 0"
-        ]
-        
-        let parser = ParseRsyncOutput(output, true)
-        
-        // Should still parse other fields but stats might be "Could not set total"
-        #expect(parser.numbersonly != nil)
-        #expect(parser.stats == "Could not set total" || parser.stats?.contains("files") == true)
-    }
+        func testMalformedBytesSecLine() async throws {
+            let output = [
+                "some random text without proper format",
+                "Number of files: 100 (reg: 80, dir: 20)",
+                "Number of regular files transferred: 5",
+                "Total file size: 1,000,000 bytes",
+                "Total transferred file size: 50,000 bytes",
+                "Number of created files: 5",
+                "Number of deleted files: 0"
+            ]
+            
+            let parser = ParseRsyncOutput(output, true)
+            
+            // Should fail to parse due to missing sent/received/bytes line
+            #expect(parser.numbersonly == nil)
+            #expect(parser.errors.count > 0)
+            #expect(parser.errors.contains { error in
+                if case .missingRequiredField(let field) = error {
+                    return field.contains("sent/received/bytes")
+                }
+                return false
+            })
+        }
     
     // MARK: - Helper Method Tests
     
