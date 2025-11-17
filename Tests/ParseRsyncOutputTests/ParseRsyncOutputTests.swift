@@ -299,5 +299,267 @@ import Testing
             #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
         }
     }
+    
+    @Test("Parse valid rsync v3.x output")
+    func testRsyncVersion3ValidOutput() async throws {
+        let output = [
+            "sent 123,456 bytes  received 78,901 bytes  20,235.40 bytes/sec",
+            "Number of files: 3,956 (reg: 3,197, dir: 758, link: 1)",
+            "Number of regular files transferred: 24",
+            "Total file size: 1,016,382,148 bytes",
+            "Total transferred file size: 278,642 bytes",
+            "Number of created files: 15",
+            "Number of deleted files: 3"
+        ]
+        
+        let parser = ParseRsyncOutput(output, true)
+        
+        #expect(parser.numbersonly != nil)
+        #expect(parser.numbersonly?.numberoffiles == 3197)
+        #expect(parser.numbersonly?.totaldirectories == 758)
+        #expect(parser.numbersonly?.totalfilesize == 1016382148.0)
+        #expect(parser.numbersonly?.filestransferred == 24)
+        #expect(parser.numbersonly?.totaltransferredfilessize == 278642.0)
+        #expect(parser.numbersonly?.numberofcreatedfiles == 15)
+        #expect(parser.numbersonly?.numberofdeletedfiles == 3)
+        #expect(parser.numbersonly?.datatosynchronize == true)
+    }
+    
+    @Test("Parse rsync v3.x with no files transferred")
+    func testRsyncVersion3NoFilesTransferred() async throws {
+        let output = [
+            "sent 1,234 bytes  received 567 bytes  180.10 bytes/sec",
+            "Number of files: 1,000 (reg: 800, dir: 200)",
+            "Number of regular files transferred: 0",
+            "Total file size: 5,000,000 bytes",
+            "Total transferred file size: 0 bytes",
+            "Number of created files: 0",
+            "Number of deleted files: 0"
+        ]
+        
+        let parser = ParseRsyncOutput(output, true)
+        
+        #expect(parser.numbersonly != nil)
+        #expect(parser.numbersonly?.filestransferred == 0)
+        #expect(parser.numbersonly?.datatosynchronize == false)
+    }
+    
+    @Test("Parse rsync v3.x with data to synchronize - created files")
+    func testRsyncVersion3DataToSyncCreatedFiles() async throws {
+        let output = [
+            "sent 10,000 bytes  received 5,000 bytes  1,500.00 bytes/sec",
+            "Number of files: 100 (reg: 80, dir: 20)",
+            "Number of regular files transferred: 0",
+            "Total file size: 1,000,000 bytes",
+            "Total transferred file size: 0 bytes",
+            "Number of created files: 5",
+            "Number of deleted files: 0"
+        ]
+        
+        let parser = ParseRsyncOutput(output, true)
+        
+        #expect(parser.numbersonly?.datatosynchronize == true)
+        #expect(parser.numbersonly?.numberofcreatedfiles == 5)
+    }
+    
+    @Test("Parse rsync v3.x with data to synchronize - deleted files")
+    func testRsyncVersion3DataToSyncDeletedFiles() async throws {
+        let output = [
+            "sent 10,000 bytes  received 5,000 bytes  1,500.00 bytes/sec",
+            "Number of files: 100 (reg: 80, dir: 20)",
+            "Number of regular files transferred: 0",
+            "Total file size: 1,000,000 bytes",
+            "Total transferred file size: 0 bytes",
+            "Number of created files: 0",
+            "Number of deleted files: 8"
+        ]
+        
+        let parser = ParseRsyncOutput(output, true)
+        
+        #expect(parser.numbersonly?.datatosynchronize == true)
+        #expect(parser.numbersonly?.numberofdeletedfiles == 8)
+    }
+    
+    // MARK: - Rsync v2.x Tests
+    
+    @Test("Parse valid rsync v2.x output")
+    func testRsyncVersion2ValidOutput() async throws {
+        let output = [
+            "sent 123456 bytes  received 78901 bytes  20235.40 bytes/sec",
+            "Number of files: 3956",
+            "Number of files transferred: 24",
+            "Total file size: 1016381703 bytes",
+            "Total transferred file size: 278197 bytes"
+        ]
+        
+        let parser = ParseRsyncOutput(output, false)
+        
+        #expect(parser.numbersonly != nil)
+        #expect(parser.numbersonly?.numberoffiles == 3956)
+        #expect(parser.numbersonly?.totaldirectories == 0)
+        #expect(parser.numbersonly?.totalfilesize == 1016381703.0)
+        #expect(parser.numbersonly?.filestransferred == 24)
+        #expect(parser.numbersonly?.totaltransferredfilessize == 278197.0)
+        #expect(parser.numbersonly?.numberofcreatedfiles == 0)
+        #expect(parser.numbersonly?.numberofdeletedfiles == 0)
+    }
+    
+    @Test("Parse rsync v2.x with no files transferred")
+    func testRsyncVersion2NoFilesTransferred() async throws {
+        let output = [
+            "sent 1234 bytes  received 567 bytes  180.10 bytes/sec",
+            "Number of files: 1000",
+            "Number of files transferred: 0",
+            "Total file size: 5000000 bytes",
+            "Total transferred file size: 0 bytes"
+        ]
+        
+        let parser = ParseRsyncOutput(output, false)
+        
+        #expect(parser.numbersonly != nil)
+        #expect(parser.numbersonly?.filestransferred == 0)
+        #expect(parser.numbersonly?.datatosynchronize == false)
+    }
+    
+    // MARK: - Edge Cases and Error Handling
+    
+    @Test("Parse incomplete rsync output")
+    func testIncompleteOutput() async throws {
+        let output = [
+            "sent 123456 bytes  received 78901 bytes  20235.40 bytes/sec",
+            "Number of files: 100"
+            // Missing required fields
+        ]
+        
+        let parser = ParseRsyncOutput(output, true)
+        
+        #expect(parser.numbersonly == nil)
+    }
+    
+    @Test("Parse empty rsync output")
+    func testEmptyOutput() async throws {
+        let output: [String] = []
+        
+        let parser = ParseRsyncOutput(output, true)
+        
+        #expect(parser.numbersonly == nil)
+    }
+    
+    @Test("Parse malformed bytes/sec line")
+    func testMalformedBytesSecLine() async throws {
+        let output = [
+            "some random text without proper format",
+            "Number of files: 100 (reg: 80, dir: 20)",
+            "Number of regular files transferred: 5",
+            "Total file size: 1,000,000 bytes",
+            "Total transferred file size: 50,000 bytes",
+            "Number of created files: 5",
+            "Number of deleted files: 0"
+        ]
+        
+        let parser = ParseRsyncOutput(output, true)
+        
+        // Should still parse other fields but stats might be "Could not set total"
+        #expect(parser.numbersonly != nil)
+        #expect(parser.stats == "Could not set total" || parser.stats?.contains("files") == true)
+    }
+    
+    // MARK: - Helper Method Tests
+    
+    @Test("returnIntNumber extracts integers correctly")
+    func testReturnIntNumber() async throws {
+        let parser = ParseRsyncOutput([], true)
+        
+        let result1 = parser.returnIntNumber("Number of files: 3,956 (reg: 3,197, dir: 758)")
+        #expect(result1 == [3956, 3197, 758])
+        
+        let result2 = parser.returnIntNumber("No numbers here!")
+        #expect(result2 == [0])
+        
+        let result3 = parser.returnIntNumber("123,456,789")
+        #expect(result3 == [123456789])
+    }
+    
+    @Test("returnDoubleNumber extracts doubles correctly")
+    func testReturnDoubleNumber() async throws {
+        let parser = ParseRsyncOutput([], true)
+        
+        let result1 = parser.returnDoubleNumber("Total file size: 1,016,382,148 bytes")
+        #expect(result1 == [1016382148.0])
+        
+        let result2 = parser.returnDoubleNumber("No numbers here!")
+        #expect(result2 == [0.0])
+        
+        let result3 = parser.returnDoubleNumber("123,456")
+        #expect(result3 == [123456.0])
+    }
+    
+    // MARK: - Formatted String Tests
+    
+    @Test("Formatted strings return correct values")
+    func testFormattedStrings() async throws {
+        let output = [
+            "sent 123,456 bytes  received 78,901 bytes  20,235.40 bytes/sec",
+            "Number of files: 3,956 (reg: 3,197, dir: 758, link: 1)",
+            "Number of regular files transferred: 24",
+            "Total file size: 1,016,382,148 bytes",
+            "Total transferred file size: 278,642 bytes",
+            "Number of created files: 15",
+            "Number of deleted files: 3"
+        ]
+        
+        let parser = ParseRsyncOutput(output, true)
+        
+        #expect(parser.formatted_filestransferred == "24")
+        #expect(parser.formatted_numberofcreatedfiles == "15")
+        #expect(parser.formatted_numberofdeletedfiles == "3")
+        // Note: formatted values depend on locale, so exact string matching may vary
+        #expect(parser.formatted_numberoffiles.count > 0)
+    }
+    
+    // MARK: - Stats Calculation Tests
+    
+    @Test("Stats calculation produces valid output")
+    func testStatsCalculation() async throws {
+        let output = [
+            "sent 500,000 bytes  received 100,000 bytes  10,000.00 bytes/sec",
+            "Number of files: 100 (reg: 80, dir: 20)",
+            "Number of regular files transferred: 10",
+            "Total file size: 1,000,000 bytes",
+            "Total transferred file size: 500,000 bytes",
+            "Number of created files: 0",
+            "Number of deleted files: 0"
+        ]
+        
+        let parser = ParseRsyncOutput(output, true)
+        
+        #expect(parser.stats != nil)
+        #expect(parser.stats?.contains("files") == true)
+        #expect(parser.stats?.contains("MB") == true)
+        #expect(parser.stats?.contains("seconds") == true)
+    }
+    
+    // MARK: - Real-World Output Tests
+    
+    @Test("Parse real rsync v3.x output with large numbers")
+    func testRealWorldLargeSync() async throws {
+        let output = [
+            "sent 15,234,567,890 bytes  received 1,234,567 bytes  125,456.78 bytes/sec",
+            "Number of files: 125,456 (reg: 100,234, dir: 25,222)",
+            "Number of regular files transferred: 1,234",
+            "Total file size: 50,000,000,000 bytes",
+            "Total transferred file size: 15,234,567,890 bytes",
+            "Number of created files: 500",
+            "Number of deleted files: 200"
+        ]
+        
+        let parser = ParseRsyncOutput(output, true)
+        
+        #expect(parser.numbersonly != nil)
+        #expect(parser.numbersonly?.numberoffiles == 100234)
+        #expect(parser.numbersonly?.totaldirectories == 25222)
+        #expect(parser.numbersonly?.filestransferred == 1234)
+        #expect(parser.numbersonly?.datatosynchronize == true)
+    }
 }
 
