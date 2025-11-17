@@ -6,6 +6,11 @@ import OSLog
 
 // MARK: - Error Types
 
+public enum VersionRsync {
+    case ver3
+    case openrsync
+}
+
 public enum RsyncParseError: Error, LocalizedError {
     case missingRequiredField(String)
     case invalidNumberFormat(field: String, value: String)
@@ -120,7 +125,7 @@ public final class ParseRsyncOutput {
     }
 
     public func rsyncver3(stringnumbersonly: StringNumbersOnly) {
-        Logger.process.debug("ParseRsyncOutput: rsyncver3()")
+        Logger.process.debugmesseageonly("ParseRsyncOutput: rsyncver3()")
         
         var my_filestransferred: [Int]?
         var my_totaltransferredfilessize: [Double]?
@@ -220,7 +225,7 @@ public final class ParseRsyncOutput {
     }
 
     public func rsyncver2(stringnumbersonly: StringNumbersOnly) {
-        Logger.process.debug("ParseRsyncOutput: rsyncver2()")
+        Logger.process.debugmesseageonly("ParseRsyncOutput: rsyncver2()")
         
         var my_filestransferred: [Int]?
         var my_totaltransferredfilessize: [Double]?
@@ -286,7 +291,7 @@ public final class ParseRsyncOutput {
                                stringnumbersonly: StringNumbersOnly,
                                numbersonly: NumbersOnly) throws -> String {
         
-        Logger.process.debug("ParseRsyncOutput: calculateStats()")
+        Logger.process.debugmesseageonly("ParseRsyncOutput: calculateStats()")
         
         var parts: [String]?
         if version3ofrsync {
@@ -356,7 +361,7 @@ public final class ParseRsyncOutput {
         }
     }
 
-    public init(_ preparedoutputfromrsync: [String], _ version3ofrsync: Bool) {
+    public init(_ preparedoutputfromrsync: [String], _ rsyncversion: VersionRsync) {
         var result = ""
         
         // Validate input
@@ -400,8 +405,9 @@ public final class ParseRsyncOutput {
             $0.contains("Number of deleted files:") ? $0 : nil
         }
         
-        // Process based on version
-        if version3ofrsync {
+        switch rsyncversion {
+        case .ver3:
+            Logger.process.debugmesseageonly("ParseRsyncOutput: init() version 3 of rsync")
             // Validate v3 requirements
             var missingFields: [String] = []
             if totaltransferredfilessize.count != 1 { missingFields.append("Total transferred file size") }
@@ -427,7 +433,8 @@ public final class ParseRsyncOutput {
             if let stringnumbersonly {
                 rsyncver3(stringnumbersonly: stringnumbersonly)
             }
-        } else {
+        case .openrsync:
+            Logger.process.debugmesseageonly("ParseRsyncOutput: init() version 2 or openrsync")
             // Validate v2 requirements
             var missingFields: [String] = []
             if filestransferred.count != 1 { missingFields.append("Number of files transferred") }

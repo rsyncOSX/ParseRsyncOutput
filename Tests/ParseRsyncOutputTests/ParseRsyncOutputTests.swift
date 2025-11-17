@@ -176,7 +176,7 @@ import Testing
         if let array  {
             
             let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
-            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, true)
+            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync,.ver3)
             
             #expect(parsersyncoutput.stats == "6846 files : 0.39 MB in 0.47 seconds")
             #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24788299.0)
@@ -195,7 +195,7 @@ import Testing
         if let array  {
             
             let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
-            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, false)
+            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, .openrsync)
             #expect(parsersyncoutput.stats == "6846 files : 0.38 MB in 2.25 seconds")
             #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24788299.0)
             #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
@@ -213,7 +213,7 @@ import Testing
         if let array  {
             
             let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
-            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, false)
+            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, .openrsync)
             #expect(parsersyncoutput.stats == "6966 files : 0.39 MB in 1.35 seconds")
             #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24929166.0)
             #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
@@ -231,7 +231,7 @@ import Testing
         if let array  {
             
             let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
-            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, true)
+            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync,.ver3)
             
             #expect(parsersyncoutput.stats == "44 files : 1.81 MB in 1.49 seconds")
             #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 254016.0)
@@ -250,7 +250,7 @@ import Testing
         if let array  {
             
             let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
-            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, true)
+            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync,.ver3)
             
             #expect(parsersyncoutput.stats == "3301 files : 0.19 MB in 1.42 seconds")
             #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 27747677.0)
@@ -269,7 +269,7 @@ import Testing
         if let array  {
             
             let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
-            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, false)
+            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, .openrsync)
             #expect(parsersyncoutput.stats == "44 files : 1.50 MB in 1.50 seconds")
             #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 254016.0)
             #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
@@ -287,7 +287,7 @@ import Testing
         if let array  {
             
             let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
-            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, false)
+            let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, .openrsync)
             #expect(parsersyncoutput.stats == "3301 files : 0.30 MB in 0.16 seconds")
             #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 27747677.0)
             #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
@@ -312,7 +312,7 @@ import Testing
             "Number of deleted files: 3"
         ]
         
-        let parser = ParseRsyncOutput(output, true)
+        let parser = ParseRsyncOutput(output, .ver3)
         
         #expect(parser.numbersonly != nil)
         #expect(parser.numbersonly?.numberoffiles == 3197)
@@ -337,7 +337,7 @@ import Testing
             "Number of deleted files: 0"
         ]
         
-        let parser = ParseRsyncOutput(output, true)
+        let parser = ParseRsyncOutput(output, .ver3)
         
         #expect(parser.numbersonly != nil)
         #expect(parser.numbersonly?.filestransferred == 0)
@@ -356,7 +356,7 @@ import Testing
             "Number of deleted files: 0"
         ]
         
-        let parser = ParseRsyncOutput(output, true)
+        let parser = ParseRsyncOutput(output,.ver3)
         
         #expect(parser.numbersonly?.datatosynchronize == true)
         #expect(parser.numbersonly?.numberofcreatedfiles == 5)
@@ -374,7 +374,7 @@ import Testing
             "Number of deleted files: 8"
         ]
         
-        let parser = ParseRsyncOutput(output, true)
+        let parser = ParseRsyncOutput(output,.ver3)
         
         #expect(parser.numbersonly?.datatosynchronize == true)
         #expect(parser.numbersonly?.numberofdeletedfiles == 8)
@@ -392,7 +392,7 @@ import Testing
             "Total transferred file size: 278197 bytes"
         ]
         
-        let parser = ParseRsyncOutput(output, false)
+        let parser = ParseRsyncOutput(output, .openrsync)
         
         #expect(parser.numbersonly != nil)
         #expect(parser.numbersonly?.numberoffiles == 3956)
@@ -414,7 +414,7 @@ import Testing
             "Total transferred file size: 0 bytes"
         ]
         
-        let parser = ParseRsyncOutput(output, false)
+        let parser = ParseRsyncOutput(output, .openrsync)
         
         #expect(parser.numbersonly != nil)
         #expect(parser.numbersonly?.filestransferred == 0)
@@ -431,7 +431,7 @@ import Testing
             // Missing required fields
         ]
         
-        let parser = ParseRsyncOutput(output, true)
+        let parser = ParseRsyncOutput(output,.ver3)
         
         #expect(parser.numbersonly == nil)
     }
@@ -440,7 +440,7 @@ import Testing
     func testEmptyOutput() async throws {
         let output: [String] = []
         
-        let parser = ParseRsyncOutput(output, true)
+        let parser = ParseRsyncOutput(output,.ver3)
         
         #expect(parser.numbersonly == nil)
     }
@@ -457,7 +457,7 @@ import Testing
                 "Number of deleted files: 0"
             ]
             
-            let parser = ParseRsyncOutput(output, true)
+            let parser = ParseRsyncOutput(output,.ver3)
             
             // Should fail to parse due to missing sent/received/bytes line
             #expect(parser.numbersonly == nil)
@@ -474,7 +474,7 @@ import Testing
     
     @Test("returnIntNumber extracts integers correctly")
     func testReturnIntNumber() async throws {
-        let parser = ParseRsyncOutput([], true)
+        let parser = ParseRsyncOutput([],.ver3)
         
         let result1 = parser.returnIntNumber("Number of files: 3,956 (reg: 3,197, dir: 758)")
         #expect(result1 == [3956, 3197, 758])
@@ -488,7 +488,7 @@ import Testing
     
     @Test("returnDoubleNumber extracts doubles correctly")
     func testReturnDoubleNumber() async throws {
-        let parser = ParseRsyncOutput([], true)
+        let parser = ParseRsyncOutput([],.ver3)
         
         let result1 = parser.returnDoubleNumber("Total file size: 1,016,382,148 bytes")
         #expect(result1 == [1016382148.0])
@@ -514,7 +514,7 @@ import Testing
             "Number of deleted files: 3"
         ]
         
-        let parser = ParseRsyncOutput(output, true)
+        let parser = ParseRsyncOutput(output,.ver3)
         
         #expect(parser.formatted_filestransferred == "24")
         #expect(parser.formatted_numberofcreatedfiles == "15")
@@ -537,7 +537,7 @@ import Testing
             "Number of deleted files: 0"
         ]
         
-        let parser = ParseRsyncOutput(output, true)
+        let parser = ParseRsyncOutput(output,.ver3)
         
         #expect(parser.stats != nil)
         #expect(parser.stats?.contains("files") == true)
@@ -559,7 +559,7 @@ import Testing
             "Number of deleted files: 200"
         ]
         
-        let parser = ParseRsyncOutput(output, true)
+        let parser = ParseRsyncOutput(output,.ver3)
         
         #expect(parser.numbersonly != nil)
         #expect(parser.numbersonly?.numberoffiles == 100234)
