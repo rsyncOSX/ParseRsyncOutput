@@ -18,6 +18,7 @@ public enum RsyncParseError: Error, LocalizedError {
     case incompleteSummaryLine
     case divisionByZero
     case unsupportedVersion
+    case nostats
     
     public var errorDescription: String? {
         switch self {
@@ -33,6 +34,8 @@ public enum RsyncParseError: Error, LocalizedError {
             return "Cannot calculate transfer time: bytes/sec is zero"
         case .unsupportedVersion:
             return "Unsupported rsync version or output format"
+        case .nostats:
+            return "No stats available"
         }
     }
 }
@@ -81,7 +84,7 @@ public struct StringNumbersOnly {
 public final class ParseRsyncOutput {
     public var stringnumbersonly: StringNumbersOnly?
     public var numbersonly: NumbersOnly?
-    public var stats: String?
+    private var stats: String?
     public private(set) var errors: [RsyncParseError] = []
     public private(set) var warnings: [String] = []
 
@@ -122,6 +125,13 @@ public final class ParseRsyncOutput {
     private func addWarning(_ warning: String) {
         warnings.append(warning)
         Logger.process.warning("ParseRsyncOutput Warning: \(warning)")
+    }
+    
+    public func getstats() throws -> String? {
+        guard let stats else {
+            throw RsyncParseError.nostats
+        }
+        return stats
     }
 
     public func rsyncver3(stringnumbersonly: StringNumbersOnly) {

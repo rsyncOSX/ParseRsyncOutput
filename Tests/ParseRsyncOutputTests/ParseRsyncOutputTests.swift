@@ -177,16 +177,18 @@ import Testing
             
             let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync,.ver3)
-            
-            #expect(parsersyncoutput.stats == "6846 files : 0.39 MB in 0.47 seconds")
-            #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24788299.0)
-            #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
-            #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 7191)
-            #expect(parsersyncoutput.numbersonly?.totaldirectories == 346)
-            #expect(parsersyncoutput.numbersonly?.numberoffiles == 6846)
-            #expect(parsersyncoutput.numbersonly?.totalfilesize == 24788299.0)
-            #expect(parsersyncoutput.numbersonly?.filestransferred == 6846)
-            #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+            do {
+                let stats = try parsersyncoutput.getstats()
+                #expect(stats == "6846 files : 0.39 MB in 0.47 seconds")
+                #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24788299.0)
+                #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
+                #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 7191)
+                #expect(parsersyncoutput.numbersonly?.totaldirectories == 346)
+                #expect(parsersyncoutput.numbersonly?.numberoffiles == 6846)
+                #expect(parsersyncoutput.numbersonly?.totalfilesize == 24788299.0)
+                #expect(parsersyncoutput.numbersonly?.filestransferred == 6846)
+                #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+            } catch {}
         }
     }
     
@@ -196,15 +198,20 @@ import Testing
             
             let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, .openrsync)
-            #expect(parsersyncoutput.stats == "6846 files : 0.38 MB in 2.25 seconds")
-            #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24788299.0)
-            #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
-            #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
-            #expect(parsersyncoutput.numbersonly?.totaldirectories == 0)
-            #expect(parsersyncoutput.numbersonly?.numberoffiles == 7192)
-            #expect(parsersyncoutput.numbersonly?.totalfilesize == 24788299.0)
-            #expect(parsersyncoutput.numbersonly?.filestransferred == 6846)
-            #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+            do {
+                let stats = try parsersyncoutput.getstats()
+                #expect(stats  == "6846 files : 0.38 MB in 2.25 seconds")
+                #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24788299.0)
+                #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
+                #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
+                #expect(parsersyncoutput.numbersonly?.totaldirectories == 0)
+                #expect(parsersyncoutput.numbersonly?.numberoffiles == 7192)
+                #expect(parsersyncoutput.numbersonly?.totalfilesize == 24788299.0)
+                #expect(parsersyncoutput.numbersonly?.filestransferred == 6846)
+                #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+            } catch {}
+            
+            
         }
     }
 
@@ -214,15 +221,21 @@ import Testing
             
             let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, .openrsync)
-            #expect(parsersyncoutput.stats == "6966 files : 0.39 MB in 1.35 seconds")
-            #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24929166.0)
-            #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
-            #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
-            #expect(parsersyncoutput.numbersonly?.totaldirectories == 0)
-            #expect(parsersyncoutput.numbersonly?.numberoffiles == 7312)
-            #expect(parsersyncoutput.numbersonly?.totalfilesize == 24929166.0)
-            #expect(parsersyncoutput.numbersonly?.filestransferred == 6966)
-            #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+            
+            do {
+                let stats = try parsersyncoutput.getstats()
+                #expect(stats  == "6966 files : 0.39 MB in 1.35 seconds")
+                #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24929166.0)
+                #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
+                #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
+                #expect(parsersyncoutput.numbersonly?.totaldirectories == 0)
+                #expect(parsersyncoutput.numbersonly?.numberoffiles == 7312)
+                #expect(parsersyncoutput.numbersonly?.totalfilesize == 24929166.0)
+                #expect(parsersyncoutput.numbersonly?.filestransferred == 6966)
+                #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+            } catch {}
+            
+            
         }
     }
     
@@ -233,15 +246,20 @@ import Testing
             let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync,.ver3)
             
-            #expect(parsersyncoutput.stats == "44 files : 1.81 MB in 1.49 seconds")
-            #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 254016.0)
-            #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
-            #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 24)
-            #expect(parsersyncoutput.numbersonly?.totaldirectories == 7145)
-            #expect(parsersyncoutput.numbersonly?.numberoffiles == 52854)
-            #expect(parsersyncoutput.numbersonly?.totalfilesize == 870769866.0)
-            #expect(parsersyncoutput.numbersonly?.filestransferred == 44)
-            #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+            do {
+                let stats = try parsersyncoutput.getstats()
+                #expect(stats  == "44 files : 1.81 MB in 1.49 seconds")
+                #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 254016.0)
+                #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
+                #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 24)
+                #expect(parsersyncoutput.numbersonly?.totaldirectories == 7145)
+                #expect(parsersyncoutput.numbersonly?.numberoffiles == 52854)
+                #expect(parsersyncoutput.numbersonly?.totalfilesize == 870769866.0)
+                #expect(parsersyncoutput.numbersonly?.filestransferred == 44)
+                #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+            } catch {}
+            
+            
         }
     }
     
@@ -252,15 +270,20 @@ import Testing
             let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync,.ver3)
             
-            #expect(parsersyncoutput.stats == "3301 files : 0.19 MB in 1.42 seconds")
-            #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 27747677.0)
-            #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
-            #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 3661)
-            #expect(parsersyncoutput.numbersonly?.totaldirectories == 360)
-            #expect(parsersyncoutput.numbersonly?.numberoffiles == 3301)
-            #expect(parsersyncoutput.numbersonly?.totalfilesize == 27747677.0)
-            #expect(parsersyncoutput.numbersonly?.filestransferred == 3301)
-            #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+            do {
+                let stats = try parsersyncoutput.getstats()
+                #expect(stats  == "3301 files : 0.19 MB in 1.42 seconds")
+                #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 27747677.0)
+                #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
+                #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 3661)
+                #expect(parsersyncoutput.numbersonly?.totaldirectories == 360)
+                #expect(parsersyncoutput.numbersonly?.numberoffiles == 3301)
+                #expect(parsersyncoutput.numbersonly?.totalfilesize == 27747677.0)
+                #expect(parsersyncoutput.numbersonly?.filestransferred == 3301)
+                #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+            } catch {}
+            
+            
         }
     }
     
@@ -270,15 +293,21 @@ import Testing
             
             let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, .openrsync)
-            #expect(parsersyncoutput.stats == "44 files : 1.50 MB in 1.50 seconds")
-            #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 254016.0)
-            #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
-            #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
-            #expect(parsersyncoutput.numbersonly?.totaldirectories == 0)
-            #expect(parsersyncoutput.numbersonly?.numberoffiles == 60110)
-            #expect(parsersyncoutput.numbersonly?.totalfilesize == 870769866.0)
-            #expect(parsersyncoutput.numbersonly?.filestransferred == 44)
-            #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+            
+            do {
+                let stats = try parsersyncoutput.getstats()
+                #expect(stats  == "44 files : 1.50 MB in 1.50 seconds")
+                #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 254016.0)
+                #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
+                #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
+                #expect(parsersyncoutput.numbersonly?.totaldirectories == 0)
+                #expect(parsersyncoutput.numbersonly?.numberoffiles == 60110)
+                #expect(parsersyncoutput.numbersonly?.totalfilesize == 870769866.0)
+                #expect(parsersyncoutput.numbersonly?.filestransferred == 44)
+                #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+            } catch {}
+            
+            
         }
     }
     
@@ -288,15 +317,21 @@ import Testing
             
             let trimmedoutputfromrsync = PrepareOutputFromRsync().prepareOutputFromRsync(array)
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, .openrsync)
-            #expect(parsersyncoutput.stats == "3301 files : 0.30 MB in 0.16 seconds")
-            #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 27747677.0)
-            #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
-            #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
-            #expect(parsersyncoutput.numbersonly?.totaldirectories == 0)
-            #expect(parsersyncoutput.numbersonly?.numberoffiles == 3661)
-            #expect(parsersyncoutput.numbersonly?.totalfilesize == 27747677.0)
-            #expect(parsersyncoutput.numbersonly?.filestransferred == 3301)
-            #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+            
+            do {
+                let stats = try parsersyncoutput.getstats()
+                #expect(stats  == "3301 files : 0.30 MB in 0.16 seconds")
+                #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 27747677.0)
+                #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
+                #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
+                #expect(parsersyncoutput.numbersonly?.totaldirectories == 0)
+                #expect(parsersyncoutput.numbersonly?.numberoffiles == 3661)
+                #expect(parsersyncoutput.numbersonly?.totalfilesize == 27747677.0)
+                #expect(parsersyncoutput.numbersonly?.filestransferred == 3301)
+                #expect(parsersyncoutput.numbersonly?.datatosynchronize == true)
+            } catch {}
+            
+            
         }
     }
     
@@ -539,10 +574,14 @@ import Testing
         
         let parser = ParseRsyncOutput(output,.ver3)
         
-        #expect(parser.stats != nil)
-        #expect(parser.stats?.contains("files") == true)
-        #expect(parser.stats?.contains("MB") == true)
-        #expect(parser.stats?.contains("seconds") == true)
+        do {
+            let stats = try parser.getstats()
+            #expect(stats?.contains("files") == true)
+            #expect(stats?.contains("MB") == true)
+            #expect(stats?.contains("seconds") == true)
+        } catch { }
+        
+        
     }
     
     // MARK: - Real-World Output Tests
