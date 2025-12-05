@@ -11,7 +11,7 @@ let package = Package(
         .library(
             name: "ParseRsyncOutput",
             targets: ["ParseRsyncOutput"]
-        )
+        ),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -21,16 +21,16 @@ let package = Package(
         .testTarget(
             name: "ParseRsyncOutputTests",
             dependencies: ["ParseRsyncOutput"]
-        )
+        ),
     ]
 )
 /*
-for target in package.targets {
-  var settings = target.swiftSettings ?? []
-  settings.append(contentsOf: [
-    .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-    .enableUpcomingFeature("InferIsolatedConformances")
-  ])
-  target.swiftSettings = settings
-}
-*/
+ for target in package.targets {
+   var settings = target.swiftSettings ?? []
+   settings.append(contentsOf: [
+     .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+     .enableUpcomingFeature("InferIsolatedConformances")
+   ])
+   target.swiftSettings = settings
+ }
+ */
