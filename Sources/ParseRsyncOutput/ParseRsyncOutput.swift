@@ -140,95 +140,77 @@ public final class ParseRsyncOutput {
         return stats
     }
 
-    public func rsyncver3(stringnumbersonly: StringNumbersOnly) {
-        Logger.process.debugmesseageonly("ParseRsyncOutput: rsyncver3()")
-
-        var my_filestransferred: [Int]?
-        var my_totaltransferredfilessize: [Double]?
-        var my_totalfilesize: [Double]?
-        var my_numberoffiles: Int?
-        var my_numberofcreatedfiles: [Int]?
-        var my_numberofdeletedfiles: [Int]?
-        var my_totaldirectories: Int?
-        var datatosynchronize = false
-
-        // Parse files transferred
-        my_filestransferred = returnIntNumber(stringnumbersonly.filestransferred[0])
-        if my_filestransferred?.isEmpty ?? true {
-            addError(.invalidNumberFormat(field: "files transferred",
-                                          value: stringnumbersonly.filestransferred[0]))
-            return
+    private func parseV3Fields(_ stringnumbersonly: StringNumbersOnly) -> (filestransferred: [Int]?,
+                                                                           totaltransferredfilessize: [Double]?, totalfilesize: [Double]?,
+                                                                           numberoffiles: Int?,
+                                                                           numberofcreatedfiles: [Int]?,
+                                                                           numberofdeletedfiles: [Int]?,
+                                                                           totaldirectories: Int?)? {
+        let my_filestransferred = returnIntNumber(stringnumbersonly.filestransferred[0])
+        if my_filestransferred.isEmpty {
+            addError(.invalidNumberFormat(field: "files transferred", value: stringnumbersonly.filestransferred[0]))
+            return nil
         }
 
-        // Parse transferred file size
-        my_totaltransferredfilessize = returnDoubleNumber(stringnumbersonly.totaltransferredfilessize[0])
-        if my_totaltransferredfilessize?.isEmpty ?? true {
-            addError(.invalidNumberFormat(field: "total transferred file size",
-                                          value: stringnumbersonly.totaltransferredfilessize[0]))
-            return
+        let my_totaltransferredfilessize = returnDoubleNumber(stringnumbersonly.totaltransferredfilessize[0])
+        if my_totaltransferredfilessize.isEmpty {
+            addError(.invalidNumberFormat(field: "total transferred file size", value: stringnumbersonly.totaltransferredfilessize[0]))
+            return nil
         }
 
-        // Parse total file size
-        my_totalfilesize = returnDoubleNumber(stringnumbersonly.totalfilesize[0])
-        if my_totalfilesize?.isEmpty ?? true {
-            addError(.invalidNumberFormat(field: "total file size",
-                                          value: stringnumbersonly.totalfilesize[0]))
-            return
+        let my_totalfilesize = returnDoubleNumber(stringnumbersonly.totalfilesize[0])
+        if my_totalfilesize.isEmpty {
+            addError(.invalidNumberFormat(field: "total file size", value: stringnumbersonly.totalfilesize[0]))
+            return nil
         }
 
-        // Parse number of files and directories
         let tempfiles = returnIntNumber(stringnumbersonly.numberoffiles[0])
-        if tempfiles.count > 1 {
-            my_numberoffiles = tempfiles[1]
-        } else {
-            my_numberoffiles = 0
+        let my_numberoffiles = tempfiles.count > 1 ? tempfiles[1] : 0
+        if tempfiles.count <= 1 {
             addWarning("Could not parse regular files count from: '\(stringnumbersonly.numberoffiles[0])'")
         }
 
         let directories = returnIntNumber(stringnumbersonly.numberoffiles[0])
-        if directories.count > 2 {
-            my_totaldirectories = directories[2]
-        } else {
-            my_totaldirectories = 0
+        let my_totaldirectories = directories.count > 2 ? directories[2] : 0
+        if directories.count <= 2 {
             addWarning("Could not parse directories count from: '\(stringnumbersonly.numberoffiles[0])'")
         }
 
-        // Parse created files
-        my_numberofcreatedfiles = returnIntNumber(stringnumbersonly.numberofcreatedfiles[0])
-        if my_numberofcreatedfiles?.isEmpty ?? true {
-            addError(.invalidNumberFormat(field: "number of created files",
-                                          value: stringnumbersonly.numberofcreatedfiles[0]))
+        let my_numberofcreatedfiles = returnIntNumber(stringnumbersonly.numberofcreatedfiles[0])
+        if my_numberofcreatedfiles.isEmpty {
+            addError(.invalidNumberFormat(field: "number of created files", value: stringnumbersonly.numberofcreatedfiles[0]))
+            return nil
+        }
+
+        let my_numberofdeletedfiles = returnIntNumber(stringnumbersonly.numberofdeletedfiles[0])
+        if my_numberofdeletedfiles.isEmpty {
+            addError(.invalidNumberFormat(field: "number of deleted files", value: stringnumbersonly.numberofdeletedfiles[0]))
+            return nil
+        }
+
+        return (my_filestransferred, my_totaltransferredfilessize, my_totalfilesize, my_numberoffiles, my_numberofcreatedfiles, my_numberofdeletedfiles, my_totaldirectories)
+    }
+
+    private func shouldSynchronizeV3(_ filestransferred: [Int]?, _ numberofcreatedfiles: [Int]?, _ numberofdeletedfiles: [Int]?) -> Bool {
+        (filestransferred?[0] ?? 0) > 0 || (numberofcreatedfiles?[0] ?? 0) > 0 || (numberofdeletedfiles?[0] ?? 0) > 0
+    }
+
+    public func rsyncver3(stringnumbersonly: StringNumbersOnly) {
+        Logger.process.debugmesseageonly("ParseRsyncOutput: rsyncver3()")
+
+        guard let parsed = parseV3Fields(stringnumbersonly) else {
             return
         }
 
-        // Parse deleted files
-        my_numberofdeletedfiles = returnIntNumber(stringnumbersonly.numberofdeletedfiles[0])
-        if my_numberofdeletedfiles?.isEmpty ?? true {
-            addError(.invalidNumberFormat(field: "number of deleted files",
-                                          value: stringnumbersonly.numberofdeletedfiles[0]))
-            return
-        }
+        let datatosynchronize = shouldSynchronizeV3(parsed.filestransferred, parsed.numberofcreatedfiles, parsed.numberofdeletedfiles)
 
-        // Determine if data needs synchronization
-        if let my_filestransferred, my_filestransferred[0] > 0 {
-            datatosynchronize = true
-        }
-
-        if let my_numberofcreatedfiles, my_numberofcreatedfiles[0] > 0 {
-            datatosynchronize = true
-        }
-
-        if let my_numberofdeletedfiles, my_numberofdeletedfiles[0] > 0 {
-            datatosynchronize = true
-        }
-
-        numbersonly = NumbersOnly(numberoffiles: my_numberoffiles ?? 0,
-                                  totaldirectories: my_totaldirectories ?? 0,
-                                  totalfilesize: my_totalfilesize?[0] ?? 0,
-                                  filestransferred: my_filestransferred?[0] ?? 0,
-                                  totaltransferredfilessize: my_totaltransferredfilessize?[0] ?? 0,
-                                  numberofcreatedfiles: my_numberofcreatedfiles?[0] ?? 0,
-                                  numberofdeletedfiles: my_numberofdeletedfiles?[0] ?? 0,
+        numbersonly = NumbersOnly(numberoffiles: parsed.numberoffiles ?? 0,
+                                  totaldirectories: parsed.totaldirectories ?? 0,
+                                  totalfilesize: parsed.totalfilesize?[0] ?? 0,
+                                  filestransferred: parsed.filestransferred?[0] ?? 0,
+                                  totaltransferredfilessize: parsed.totaltransferredfilessize?[0] ?? 0,
+                                  numberofcreatedfiles: parsed.numberofcreatedfiles?[0] ?? 0,
+                                  numberofdeletedfiles: parsed.numberofdeletedfiles?[0] ?? 0,
                                   datatosynchronize: datatosynchronize)
 
         if let numbersonly {
@@ -376,9 +358,66 @@ public final class ParseRsyncOutput {
         }
     }
 
-    public init(_ preparedoutputfromrsync: [String], _ rsyncversion: VersionRsync) {
-        var result = ""
+    private func extractSummaryLine(_ output: [String]) -> String? {
+        let resultRsync = output.filter {
+            $0.contains("sent") && $0.contains("received") && $0.contains("bytes/sec")
+        }
 
+        if resultRsync.count == 1 {
+            return resultRsync[0]
+        } else if resultRsync.isEmpty {
+            addError(.missingRequiredField("sent/received/bytes summary line"))
+            return nil
+        } else {
+            addWarning("Multiple summary lines found, using first one")
+            return resultRsync[0]
+        }
+    }
+
+    private func extractFields(_ output: [String]) -> (numberoffiles: [String], filestransferred: [String], totalfilesize: [String], totaltransferredfilessize: [String], numberofcreatedfiles: [String], numberofdeletedfiles: [String]) {
+        (
+            numberoffiles: output.compactMap { $0.contains("Number of files:") ? $0 : nil },
+            filestransferred: output.compactMap { $0.contains("files transferred:") ? $0 : nil },
+            totalfilesize: output.compactMap { $0.contains("Total file size:") ? $0 : nil },
+            totaltransferredfilessize: output.compactMap { $0.contains("Total transferred file size:") ? $0 : nil },
+            numberofcreatedfiles: output.compactMap { $0.contains("Number of created files:") ? $0 : nil },
+            numberofdeletedfiles: output.compactMap { $0.contains("Number of deleted files:") ? $0 : nil }
+        )
+    }
+
+    private func validateV3Fields(_ totaltransferredfilessize: [String], _ totalfilesize: [String], _ numberoffiles: [String], _ filestransferred: [String], _ numberofcreatedfiles: [String], _ numberofdeletedfiles: [String]) -> Bool {
+        Logger.process.debugmesseageonly("ParseRsyncOutput: init() version 3 of rsync")
+        var missingFields: [String] = []
+        if totaltransferredfilessize.count != 1 { missingFields.append("Total transferred file size") }
+        if totalfilesize.count != 1 { missingFields.append("Total file size") }
+        if numberoffiles.count != 1 { missingFields.append("Number of files") }
+        if filestransferred.count != 1 { missingFields.append("Number of files transferred") }
+        if numberofcreatedfiles.count != 1 { missingFields.append("Number of created files") }
+        if numberofdeletedfiles.count != 1 { missingFields.append("Number of deleted files") }
+
+        if !missingFields.isEmpty {
+            addError(.missingRequiredField("v3 fields: " + missingFields.joined(separator: ", ")))
+            return false
+        }
+        return true
+    }
+
+    private func validateV2Fields(_ filestransferred: [String], _ totaltransferredfilessize: [String], _ totalfilesize: [String], _ numberoffiles: [String]) -> Bool {
+        Logger.process.debugmesseageonly("ParseRsyncOutput: init() version 2 or openrsync")
+        var missingFields: [String] = []
+        if filestransferred.count != 1 { missingFields.append("Number of files transferred") }
+        if totaltransferredfilessize.count != 1 { missingFields.append("Total transferred file size") }
+        if totalfilesize.count != 1 { missingFields.append("Total file size") }
+        if numberoffiles.count != 1 { missingFields.append("Number of files") }
+
+        if !missingFields.isEmpty {
+            addError(.missingRequiredField("v2 fields: " + missingFields.joined(separator: ", ")))
+            return false
+        }
+        return true
+    }
+
+    public init(_ preparedoutputfromrsync: [String], _ rsyncversion: VersionRsync) {
         // Validate input
         guard !preparedoutputfromrsync.isEmpty else {
             addError(.invalidOutputFormat("Empty rsync output"))
@@ -386,89 +425,42 @@ public final class ParseRsyncOutput {
         }
 
         // Getting the summarized output
-        let resultRsync = preparedoutputfromrsync.filter {
-            $0.contains("sent") && $0.contains("received") && $0.contains("bytes/sec")
-        }
-
-        if resultRsync.count == 1 {
-            result = resultRsync[0]
-        } else if resultRsync.isEmpty {
-            addError(.missingRequiredField("sent/received/bytes summary line"))
-            return // Stop processing if summary line is missing
-        } else {
-            addWarning("Multiple summary lines found, using first one")
-            result = resultRsync[0]
+        guard let result = extractSummaryLine(preparedoutputfromrsync) else {
+            return
         }
 
         // Extract fields
-        let numberoffiles = preparedoutputfromrsync.compactMap {
-            $0.contains("Number of files:") ? $0 : nil
-        }
-        let filestransferred = preparedoutputfromrsync.compactMap {
-            $0.contains("files transferred:") ? $0 : nil
-        }
-        let totalfilesize = preparedoutputfromrsync.compactMap {
-            $0.contains("Total file size:") ? $0 : nil
-        }
-        let totaltransferredfilessize = preparedoutputfromrsync.compactMap {
-            $0.contains("Total transferred file size:") ? $0 : nil
-        }
-        let numberofcreatedfiles = preparedoutputfromrsync.compactMap {
-            $0.contains("Number of created files:") ? $0 : nil
-        }
-        let numberofdeletedfiles = preparedoutputfromrsync.compactMap {
-            $0.contains("Number of deleted files:") ? $0 : nil
-        }
+        let fields = extractFields(preparedoutputfromrsync)
 
         switch rsyncversion {
         case .ver3:
-            Logger.process.debugmesseageonly("ParseRsyncOutput: init() version 3 of rsync")
-            // Validate v3 requirements
-            var missingFields: [String] = []
-            if totaltransferredfilessize.count != 1 { missingFields.append("Total transferred file size") }
-            if totalfilesize.count != 1 { missingFields.append("Total file size") }
-            if numberoffiles.count != 1 { missingFields.append("Number of files") }
-            if filestransferred.count != 1 { missingFields.append("Number of files transferred") }
-            if numberofcreatedfiles.count != 1 { missingFields.append("Number of created files") }
-            if numberofdeletedfiles.count != 1 { missingFields.append("Number of deleted files") }
-
-            if !missingFields.isEmpty {
-                addError(.missingRequiredField("v3 fields: " + missingFields.joined(separator: ", ")))
+            guard validateV3Fields(fields.totaltransferredfilessize, fields.totalfilesize, fields.numberoffiles, fields.filestransferred, fields.numberofcreatedfiles, fields.numberofdeletedfiles) else {
                 return
             }
 
             stringnumbersonly = StringNumbersOnly(result: result,
-                                                  filestransferred: filestransferred,
-                                                  totaltransferredfilessize: totaltransferredfilessize,
-                                                  totalfilesize: totalfilesize,
-                                                  numberoffiles: numberoffiles,
-                                                  numberofcreatedfiles: numberofcreatedfiles,
-                                                  numberofdeletedfiles: numberofdeletedfiles)
+                                                  filestransferred: fields.filestransferred,
+                                                  totaltransferredfilessize: fields.totaltransferredfilessize,
+                                                  totalfilesize: fields.totalfilesize,
+                                                  numberoffiles: fields.numberoffiles,
+                                                  numberofcreatedfiles: fields.numberofcreatedfiles,
+                                                  numberofdeletedfiles: fields.numberofdeletedfiles)
 
             if let stringnumbersonly {
                 rsyncver3(stringnumbersonly: stringnumbersonly)
             }
         case .openrsync:
-            Logger.process.debugmesseageonly("ParseRsyncOutput: init() version 2 or openrsync")
-            // Validate v2 requirements
-            var missingFields: [String] = []
-            if filestransferred.count != 1 { missingFields.append("Number of files transferred") }
-            if totaltransferredfilessize.count != 1 { missingFields.append("Total transferred file size") }
-            if totalfilesize.count != 1 { missingFields.append("Total file size") }
-            if numberoffiles.count != 1 { missingFields.append("Number of files") }
-
-            if !missingFields.isEmpty {
-                addError(.missingRequiredField("v2 fields: " + missingFields.joined(separator: ", ")))
+            guard validateV2Fields(fields.filestransferred, fields.totaltransferredfilessize, fields.totalfilesize, fields.numberoffiles) else {
                 return
             }
 
             stringnumbersonly = StringNumbersOnly(result: result,
-                                                  filestransferred: filestransferred,
-                                                  totaltransferredfilessize: totaltransferredfilessize,
-                                                  totalfilesize: totalfilesize,
-                                                  numberoffiles: numberoffiles,
-                                                  numberofcreatedfiles: numberofcreatedfiles,
-                                                  numberofdeletedfiles: numberofdeletedfiles)
+                                                  filestransferred: fields.filestransferred,
+                                                  totaltransferredfilessize: fields.totaltransferredfilessize,
+                                                  totalfilesize: fields.totalfilesize,
+                                                  numberoffiles: fields.numberoffiles,
+                                                  numberofcreatedfiles: fields.numberofcreatedfiles,
+                                                  numberofdeletedfiles: fields.numberofdeletedfiles)
 
             if let stringnumbersonly {
                 rsyncver2(stringnumbersonly: stringnumbersonly)
