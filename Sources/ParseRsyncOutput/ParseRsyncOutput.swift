@@ -139,7 +139,7 @@ public final class ParseRsyncOutput {
         }
         return stats
     }
-    
+
     private struct ParsedV3FieldsData {
         let filestransferred: [Int]
         let totaltransferredfilessize: [Double]
