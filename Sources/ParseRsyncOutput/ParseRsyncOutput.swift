@@ -139,13 +139,18 @@ public final class ParseRsyncOutput {
         }
         return stats
     }
+    
+    private struct ParsedV3FieldsData {
+        let filestransferred: [Int]
+        let totaltransferredfilessize: [Double]
+        let totalfilesize: [Double]
+        let numberoffiles: Int
+        let numberofcreatedfiles: [Int]
+        let numberofdeletedfiles: [Int]
+        let totaldirectories: Int
+    }
 
-    private func parseV3Fields(_ stringnumbersonly: StringNumbersOnly) -> (filestransferred: [Int]?,
-                                                                           totaltransferredfilessize: [Double]?, totalfilesize: [Double]?,
-                                                                           numberoffiles: Int?,
-                                                                           numberofcreatedfiles: [Int]?,
-                                                                           numberofdeletedfiles: [Int]?,
-                                                                           totaldirectories: Int?)? {
+    private func parseV3Fields(_ stringnumbersonly: StringNumbersOnly) -> ParsedV3FieldsData? {
         let my_filestransferred = returnIntNumber(stringnumbersonly.filestransferred[0])
         if my_filestransferred.isEmpty {
             addError(.invalidNumberFormat(field: "files transferred", value: stringnumbersonly.filestransferred[0]))
@@ -188,7 +193,15 @@ public final class ParseRsyncOutput {
             return nil
         }
 
-        return (my_filestransferred, my_totaltransferredfilessize, my_totalfilesize, my_numberoffiles, my_numberofcreatedfiles, my_numberofdeletedfiles, my_totaldirectories)
+        return ParsedV3FieldsData(
+            filestransferred: my_filestransferred,
+            totaltransferredfilessize: my_totaltransferredfilessize,
+            totalfilesize: my_totalfilesize,
+            numberoffiles: my_numberoffiles,
+            numberofcreatedfiles: my_numberofcreatedfiles,
+            numberofdeletedfiles: my_numberofdeletedfiles,
+            totaldirectories: my_totaldirectories
+        )
     }
 
     private func shouldSynchronizeV3(_ filestransferred: [Int]?, _ numberofcreatedfiles: [Int]?, _ numberofdeletedfiles: [Int]?) -> Bool {
@@ -198,19 +211,17 @@ public final class ParseRsyncOutput {
     public func rsyncver3(stringnumbersonly: StringNumbersOnly) {
         Logger.process.debugmesseageonly("ParseRsyncOutput: rsyncver3()")
 
-        guard let parsed = parseV3Fields(stringnumbersonly) else {
-            return
-        }
+        guard let parsed = parseV3Fields(stringnumbersonly) else { return }
 
         let datatosynchronize = shouldSynchronizeV3(parsed.filestransferred, parsed.numberofcreatedfiles, parsed.numberofdeletedfiles)
 
-        numbersonly = NumbersOnly(numberoffiles: parsed.numberoffiles ?? 0,
-                                  totaldirectories: parsed.totaldirectories ?? 0,
-                                  totalfilesize: parsed.totalfilesize?[0] ?? 0,
-                                  filestransferred: parsed.filestransferred?[0] ?? 0,
-                                  totaltransferredfilessize: parsed.totaltransferredfilessize?[0] ?? 0,
-                                  numberofcreatedfiles: parsed.numberofcreatedfiles?[0] ?? 0,
-                                  numberofdeletedfiles: parsed.numberofdeletedfiles?[0] ?? 0,
+        numbersonly = NumbersOnly(numberoffiles: parsed.numberoffiles,
+                                  totaldirectories: parsed.totaldirectories,
+                                  totalfilesize: parsed.totalfilesize[0],
+                                  filestransferred: parsed.filestransferred[0],
+                                  totaltransferredfilessize: parsed.totaltransferredfilessize[0],
+                                  numberofcreatedfiles: parsed.numberofcreatedfiles[0],
+                                  numberofdeletedfiles: parsed.numberofdeletedfiles[0],
                                   datatosynchronize: datatosynchronize)
 
         if let numbersonly {
@@ -374,8 +385,38 @@ public final class ParseRsyncOutput {
         }
     }
 
+ /*
+    private struct ExtractfieldsData {
+        let numberoffiles: [String]
+        let filestransferred: [String]
+        let totalfilesize: [String]
+        let totaltransferredfilessize: [String]
+        let numberofcreatedfiles: [String]
+        let numberofdeletedfiles: [String]
+    }
+    
     private func extractFields(_ output: [String]) -> (numberoffiles: [String], filestransferred: [String], totalfilesize: [String], totaltransferredfilessize: [String], numberofcreatedfiles: [String], numberofdeletedfiles: [String]) {
         (
+            numberoffiles: output.compactMap { $0.contains("Number of files:") ? $0 : nil },
+            filestransferred: output.compactMap { $0.contains("files transferred:") ? $0 : nil },
+            totalfilesize: output.compactMap { $0.contains("Total file size:") ? $0 : nil },
+            totaltransferredfilessize: output.compactMap { $0.contains("Total transferred file size:") ? $0 : nil },
+            numberofcreatedfiles: output.compactMap { $0.contains("Number of created files:") ? $0 : nil },
+            numberofdeletedfiles: output.compactMap { $0.contains("Number of deleted files:") ? $0 : nil }
+        )
+    }
+*/
+    private struct ExtractFieldsData {
+        let numberoffiles: [String]
+        let filestransferred: [String]
+        let totalfilesize: [String]
+        let totaltransferredfilessize: [String]
+        let numberofcreatedfiles: [String]
+        let numberofdeletedfiles: [String]
+    }
+
+    private func extractFields(_ output: [String]) -> ExtractFieldsData {
+        ExtractFieldsData(
             numberoffiles: output.compactMap { $0.contains("Number of files:") ? $0 : nil },
             filestransferred: output.compactMap { $0.contains("files transferred:") ? $0 : nil },
             totalfilesize: output.compactMap { $0.contains("Total file size:") ? $0 : nil },
