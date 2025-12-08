@@ -385,27 +385,6 @@ public final class ParseRsyncOutput {
         }
     }
 
- /*
-    private struct ExtractfieldsData {
-        let numberoffiles: [String]
-        let filestransferred: [String]
-        let totalfilesize: [String]
-        let totaltransferredfilessize: [String]
-        let numberofcreatedfiles: [String]
-        let numberofdeletedfiles: [String]
-    }
-    
-    private func extractFields(_ output: [String]) -> (numberoffiles: [String], filestransferred: [String], totalfilesize: [String], totaltransferredfilessize: [String], numberofcreatedfiles: [String], numberofdeletedfiles: [String]) {
-        (
-            numberoffiles: output.compactMap { $0.contains("Number of files:") ? $0 : nil },
-            filestransferred: output.compactMap { $0.contains("files transferred:") ? $0 : nil },
-            totalfilesize: output.compactMap { $0.contains("Total file size:") ? $0 : nil },
-            totaltransferredfilessize: output.compactMap { $0.contains("Total transferred file size:") ? $0 : nil },
-            numberofcreatedfiles: output.compactMap { $0.contains("Number of created files:") ? $0 : nil },
-            numberofdeletedfiles: output.compactMap { $0.contains("Number of deleted files:") ? $0 : nil }
-        )
-    }
-*/
     private struct ExtractFieldsData {
         let numberoffiles: [String]
         let filestransferred: [String]
