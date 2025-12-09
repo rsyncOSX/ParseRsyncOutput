@@ -2,9 +2,9 @@ disabled_rules:
   - line_length
   - file_length
   - type_body_length
-  - function_body_length
+#  - function_body_length
   - trailing_comma
-  - function_parameter_count
+#  - function_parameter_count
   - identifier_name
 
 opt_in_rules:

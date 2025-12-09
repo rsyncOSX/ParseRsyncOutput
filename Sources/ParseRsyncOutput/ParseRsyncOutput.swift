@@ -385,7 +385,7 @@ public final class ParseRsyncOutput {
         }
     }
 
-    private struct ExtractFieldsData {
+    private struct ExtractFieldsDataV3 {
         let numberoffiles: [String]
         let filestransferred: [String]
         let totalfilesize: [String]
@@ -394,8 +394,8 @@ public final class ParseRsyncOutput {
         let numberofdeletedfiles: [String]
     }
 
-    private func extractFields(_ output: [String]) -> ExtractFieldsData {
-        ExtractFieldsData(
+    private func extractFieldsV3(_ output: [String]) -> ExtractFieldsDataV3 {
+        ExtractFieldsDataV3(
             numberoffiles: output.compactMap { $0.contains("Number of files:") ? $0 : nil },
             filestransferred: output.compactMap { $0.contains("files transferred:") ? $0 : nil },
             totalfilesize: output.compactMap { $0.contains("Total file size:") ? $0 : nil },
@@ -405,15 +405,15 @@ public final class ParseRsyncOutput {
         )
     }
 
-    private func validateV3Fields(_ totaltransferredfilessize: [String], _ totalfilesize: [String], _ numberoffiles: [String], _ filestransferred: [String], _ numberofcreatedfiles: [String], _ numberofdeletedfiles: [String]) -> Bool {
+    private func validateV3Fields(_ fields: ExtractFieldsDataV3) -> Bool {
         Logger.process.debugmesseageonly("ParseRsyncOutput: init() version 3 of rsync")
         var missingFields: [String] = []
-        if totaltransferredfilessize.count != 1 { missingFields.append("Total transferred file size") }
-        if totalfilesize.count != 1 { missingFields.append("Total file size") }
-        if numberoffiles.count != 1 { missingFields.append("Number of files") }
-        if filestransferred.count != 1 { missingFields.append("Number of files transferred") }
-        if numberofcreatedfiles.count != 1 { missingFields.append("Number of created files") }
-        if numberofdeletedfiles.count != 1 { missingFields.append("Number of deleted files") }
+        if fields.totaltransferredfilessize.count != 1 { missingFields.append("Total transferred file size") }
+        if fields.totalfilesize.count != 1 { missingFields.append("Total file size") }
+        if fields.numberoffiles.count != 1 { missingFields.append("Number of files") }
+        if fields.filestransferred.count != 1 { missingFields.append("Number of files transferred") }
+        if fields.numberofcreatedfiles.count != 1 { missingFields.append("Number of created files") }
+        if fields.numberofdeletedfiles.count != 1 { missingFields.append("Number of deleted files") }
 
         if !missingFields.isEmpty {
             addError(.missingRequiredField("v3 fields: " + missingFields.joined(separator: ", ")))
@@ -450,11 +450,11 @@ public final class ParseRsyncOutput {
         }
 
         // Extract fields
-        let fields = extractFields(preparedoutputfromrsync)
+        let fields = extractFieldsV3(preparedoutputfromrsync)
 
         switch rsyncversion {
         case .ver3:
-            guard validateV3Fields(fields.totaltransferredfilessize, fields.totalfilesize, fields.numberoffiles, fields.filestransferred, fields.numberofcreatedfiles, fields.numberofdeletedfiles) else {
+            guard validateV3Fields(fields) else {
                 return
             }
 
