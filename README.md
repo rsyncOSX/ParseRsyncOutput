@@ -14,6 +14,7 @@ A Swift package for parsing rsync command output and extracting synchronization 
 - **Warning System**: Non-fatal warnings for partial parsing issues
 - **Formatted Output**: Pre-formatted strings ready for UI display
 - **Type-Safe Parsing**: Strongly-typed data structures for parsed results
+- **Struct-Based Validation**: Shared field bundles (`ExtractFieldsDataV2`/`ExtractFieldsDataV3`) keep rsync 2.x and 3.x parsing aligned with consistent error reporting
 - **Performance Metrics**: Automatic calculation of transfer speed and duration
 
 ## Requirements
@@ -302,6 +303,14 @@ All properties return localized, formatted strings:
 - `returnDoubleNumber(_:) -> [Double]` - Extract doubles from string
 
 ## Parsing Details
+
+### Internals (Maintainers)
+
+- `extractSummaryLine(_:)` picks the single sent/received/bytes line and flags missing or duplicate cases.
+- `extractFieldsV3(_:)` returns grouped v3 fields; v2 uses the same arrays but is wrapped in `ExtractFieldsDataV2` for symmetry.
+- `validateV3Fields(_:)` and `validateV2Fields(_:)` perform count checks on their respective structs before parsing, emitting `missingRequiredField` with aggregated names.
+- `parseV3Fields(_:)` and `rsyncver2(_:)` convert strings to numbers; invalid formats are caught early with typed errors.
+- `calculateStats(_:stringnumbersonly:numbersonly:)` builds the human-readable summary and guards against divide-by-zero or malformed values.
 
 ### Rsync 3.x Output Format
 
