@@ -394,6 +394,13 @@ public final class ParseRsyncOutput {
         let numberofdeletedfiles: [String]
     }
 
+    private struct ExtractFieldsDataV2 {
+        let numberoffiles: [String]
+        let filestransferred: [String]
+        let totalfilesize: [String]
+        let totaltransferredfilessize: [String]
+    }
+
     private func extractFieldsV3(_ output: [String]) -> ExtractFieldsDataV3 {
         ExtractFieldsDataV3(
             numberoffiles: output.compactMap { $0.contains("Number of files:") ? $0 : nil },
@@ -422,13 +429,13 @@ public final class ParseRsyncOutput {
         return true
     }
 
-    private func validateV2Fields(_ filestransferred: [String], _ totaltransferredfilessize: [String], _ totalfilesize: [String], _ numberoffiles: [String]) -> Bool {
+    private func validateV2Fields(_ fields: ExtractFieldsDataV2) -> Bool {
         Logger.process.debugmesseageonly("ParseRsyncOutput: init() version 2 or openrsync")
         var missingFields: [String] = []
-        if filestransferred.count != 1 { missingFields.append("Number of files transferred") }
-        if totaltransferredfilessize.count != 1 { missingFields.append("Total transferred file size") }
-        if totalfilesize.count != 1 { missingFields.append("Total file size") }
-        if numberoffiles.count != 1 { missingFields.append("Number of files") }
+        if fields.filestransferred.count != 1 { missingFields.append("Number of files transferred") }
+        if fields.totaltransferredfilessize.count != 1 { missingFields.append("Total transferred file size") }
+        if fields.totalfilesize.count != 1 { missingFields.append("Total file size") }
+        if fields.numberoffiles.count != 1 { missingFields.append("Number of files") }
 
         if !missingFields.isEmpty {
             addError(.missingRequiredField("v2 fields: " + missingFields.joined(separator: ", ")))
@@ -470,7 +477,13 @@ public final class ParseRsyncOutput {
                 rsyncver3(stringnumbersonly: stringnumbersonly)
             }
         case .openrsync:
-            guard validateV2Fields(fields.filestransferred, fields.totaltransferredfilessize, fields.totalfilesize, fields.numberoffiles) else {
+            let v2fields = ExtractFieldsDataV2(
+                numberoffiles: fields.numberoffiles,
+                filestransferred: fields.filestransferred,
+                totalfilesize: fields.totalfilesize,
+                totaltransferredfilessize: fields.totaltransferredfilessize
+            )
+            guard validateV2Fields(v2fields) else {
                 return
             }
 
