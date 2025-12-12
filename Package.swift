@@ -1,6 +1,6 @@
 // swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
-
+// swiftlint:disable trailing_comma
 import PackageDescription
 
 let package = Package(
@@ -24,13 +24,4 @@ let package = Package(
         ),
     ]
 )
-/*
- for target in package.targets {
-   var settings = target.swiftSettings ?? []
-   settings.append(contentsOf: [
-     .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-     .enableUpcomingFeature("InferIsolatedConformances")
-   ])
-   target.swiftSettings = settings
- }
- */
+// swiftlint:enable trailing_comma

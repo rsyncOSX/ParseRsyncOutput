@@ -89,31 +89,38 @@ public final class ParseRsyncOutput {
     public private(set) var warnings: [String] = []
 
     public var formatted_filestransferred: String {
-        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.filestransferred ?? 0), number: NumberFormatter.Style.none)
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.filestransferred ?? 0),
+                                        number: NumberFormatter.Style.none)
     }
 
     public var formatted_numberoffiles: String {
-        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.numberoffiles ?? 0), number: NumberFormatter.Style.decimal)
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.numberoffiles ?? 0),
+                                        number: NumberFormatter.Style.decimal)
     }
 
     public var formatted_totalfilesize: String {
-        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totalfilesize ?? 0), number: NumberFormatter.Style.decimal)
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totalfilesize ?? 0),
+                                        number: NumberFormatter.Style.decimal)
     }
 
     public var formatted_totaldirectories: String {
-        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totaldirectories ?? 0), number: NumberFormatter.Style.decimal)
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totaldirectories ?? 0),
+                                        number: NumberFormatter.Style.decimal)
     }
 
     public var formatted_numberoffiles_totaldirectories: String {
-        NumberFormatter.localizedString(from: NSNumber(value: (numbersonly?.totaldirectories ?? 0) + (numbersonly?.numberoffiles ?? 0)), number: NumberFormatter.Style.decimal)
+        NumberFormatter.localizedString(from: NSNumber(value: (numbersonly?.totaldirectories ?? 0) +
+                (numbersonly?.numberoffiles ?? 0)), number: NumberFormatter.Style.decimal)
     }
 
     public var formatted_numberofcreatedfiles: String {
-        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.numberofcreatedfiles ?? 0), number: NumberFormatter.Style.none)
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.numberofcreatedfiles ?? 0),
+                                        number: NumberFormatter.Style.none)
     }
 
     public var formatted_numberofdeletedfiles: String {
-        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.numberofdeletedfiles ?? 0), number: NumberFormatter.Style.none)
+        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.numberofdeletedfiles ?? 0),
+                                        number: NumberFormatter.Style.none)
     }
 
     public var parseResult: ParseResult {
@@ -159,7 +166,8 @@ public final class ParseRsyncOutput {
 
         let my_totaltransferredfilessize = returnDoubleNumber(stringnumbersonly.totaltransferredfilessize[0])
         if my_totaltransferredfilessize.isEmpty {
-            addError(.invalidNumberFormat(field: "total transferred file size", value: stringnumbersonly.totaltransferredfilessize[0]))
+            addError(.invalidNumberFormat(field: "total transferred file size",
+                                          value: stringnumbersonly.totaltransferredfilessize[0]))
             return nil
         }
 
@@ -204,8 +212,12 @@ public final class ParseRsyncOutput {
         )
     }
 
-    private func shouldSynchronizeV3(_ filestransferred: [Int]?, _ numberofcreatedfiles: [Int]?, _ numberofdeletedfiles: [Int]?) -> Bool {
-        (filestransferred?[0] ?? 0) > 0 || (numberofcreatedfiles?[0] ?? 0) > 0 || (numberofdeletedfiles?[0] ?? 0) > 0
+    private func shouldSynchronizeV3(_ filestransferred: [Int]?,
+                                     _ numberofcreatedfiles: [Int]?,
+                                     _ numberofdeletedfiles: [Int]?) -> Bool {
+        (filestransferred?[0] ?? 0) > 0 ||
+            (numberofcreatedfiles?[0] ?? 0) > 0 ||
+            (numberofdeletedfiles?[0] ?? 0) > 0
     }
 
     public func rsyncver3(stringnumbersonly: StringNumbersOnly) {
@@ -213,7 +225,9 @@ public final class ParseRsyncOutput {
 
         guard let parsed = parseV3Fields(stringnumbersonly) else { return }
 
-        let datatosynchronize = shouldSynchronizeV3(parsed.filestransferred, parsed.numberofcreatedfiles, parsed.numberofdeletedfiles)
+        let datatosynchronize = shouldSynchronizeV3(parsed.filestransferred,
+                                                    parsed.numberofcreatedfiles,
+                                                    parsed.numberofdeletedfiles)
 
         numbersonly = NumbersOnly(numberoffiles: parsed.numberoffiles,
                                   totaldirectories: parsed.totaldirectories,
