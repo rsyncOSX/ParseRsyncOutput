@@ -212,12 +212,16 @@ public final class ParseRsyncOutput {
         )
     }
 
-    private func shouldSynchronizeV3(_ filestransferred: [Int]?,
-                                     _ numberofcreatedfiles: [Int]?,
-                                     _ numberofdeletedfiles: [Int]?) -> Bool {
-        (filestransferred?[0] ?? 0) > 0 ||
-            (numberofcreatedfiles?[0] ?? 0) > 0 ||
-            (numberofdeletedfiles?[0] ?? 0) > 0
+    private func shouldSynchronizeV3(_ filestransferred: [Int],
+                                     _ numberofcreatedfiles: [Int],
+                                     _ numberofdeletedfiles: [Int]) -> Bool {
+        guard !filestransferred.isEmpty,
+              !numberofcreatedfiles.isEmpty,
+              !numberofdeletedfiles.isEmpty else { return false }
+        
+        return (filestransferred[0]  > 0 ||
+            numberofcreatedfiles[0]  > 0 ||
+            numberofdeletedfiles[0]  > 0)
     }
 
     public func rsyncver3(stringnumbersonly: StringNumbersOnly) {
