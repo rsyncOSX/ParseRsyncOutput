@@ -125,7 +125,7 @@ public final class ParseRsyncOutput {
     
     public var formatted_totaltransferredfilessize: String {
         NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totaltransferredfilessize ?? 0),
-                                        number: NumberFormatter.Style.none)
+                                        number: NumberFormatter.Style.decimal)
     }
 
     public var parseResult: ParseResult {
