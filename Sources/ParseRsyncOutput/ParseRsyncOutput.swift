@@ -254,53 +254,47 @@ public final class ParseRsyncOutput {
     public func rsyncver2(stringnumbersonly: StringNumbersOnly) {
         Logger.process.debugmesseageonly("ParseRsyncOutput: rsyncver2()")
 
-        var my_filestransferred: [Int]?
-        var my_totaltransferredfilessize: [Double]?
-        var my_totalfilesize: [Double]?
-        var my_numberoffiles: [Int]?
         var datatosynchronize = false
 
         // Parse files transferred
-        my_filestransferred = returnIntNumber(stringnumbersonly.filestransferred[0])
-        if my_filestransferred?.isEmpty ?? true {
+        let my_filestransferred = returnIntNumber(stringnumbersonly.filestransferred[0])
+        if my_filestransferred.isEmpty {
             addError(.invalidNumberFormat(field: "files transferred",
                                           value: stringnumbersonly.filestransferred[0]))
             return
         }
 
         // Parse transferred file size
-        my_totaltransferredfilessize = returnDoubleNumber(stringnumbersonly.totaltransferredfilessize[0])
-        if my_totaltransferredfilessize?.isEmpty ?? true {
+        let my_totaltransferredfilessize = returnDoubleNumber(stringnumbersonly.totaltransferredfilessize[0])
+        if my_totaltransferredfilessize.isEmpty {
             addError(.invalidNumberFormat(field: "total transferred file size",
                                           value: stringnumbersonly.totaltransferredfilessize[0]))
             return
         }
 
         // Parse total file size
-        my_totalfilesize = returnDoubleNumber(stringnumbersonly.totalfilesize[0])
-        if my_totalfilesize?.isEmpty ?? true {
+        let my_totalfilesize = returnDoubleNumber(stringnumbersonly.totalfilesize[0])
+        if my_totalfilesize.isEmpty {
             addError(.invalidNumberFormat(field: "total file size",
                                           value: stringnumbersonly.totalfilesize[0]))
             return
         }
 
         // Parse number of files
-        my_numberoffiles = returnIntNumber(stringnumbersonly.numberoffiles[0])
-        if my_numberoffiles?.isEmpty ?? true {
+        let my_numberoffiles = returnIntNumber(stringnumbersonly.numberoffiles[0])
+        if my_numberoffiles.isEmpty  {
             addError(.invalidNumberFormat(field: "number of files",
                                           value: stringnumbersonly.numberoffiles[0]))
             return
         }
 
-        if let my_filestransferred, my_filestransferred[0] > 0 {
-            datatosynchronize = true
-        }
+        if  my_filestransferred[0] > 0 { datatosynchronize = true }
 
-        numbersonly = NumbersOnly(numberoffiles: my_numberoffiles?[0] ?? 0,
+        numbersonly = NumbersOnly(numberoffiles: my_numberoffiles[0],
                                   totaldirectories: 0,
-                                  totalfilesize: my_totalfilesize?[0] ?? 0,
-                                  filestransferred: my_filestransferred?[0] ?? 0,
-                                  totaltransferredfilessize: my_totaltransferredfilessize?[0] ?? 0,
+                                  totalfilesize: my_totalfilesize[0],
+                                  filestransferred: my_filestransferred[0],
+                                  totaltransferredfilessize: my_totaltransferredfilessize[0],
                                   numberofcreatedfiles: 0,
                                   numberofdeletedfiles: 0,
                                   datatosynchronize: datatosynchronize)
