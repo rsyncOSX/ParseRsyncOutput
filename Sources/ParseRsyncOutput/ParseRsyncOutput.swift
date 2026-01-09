@@ -164,6 +164,7 @@ public final class ParseRsyncOutput {
 
     public func getstats() throws -> String? {
         guard let stats else {
+            writeDebugOutput()
             throw RsyncParseError.nostats
         }
         return stats
@@ -268,7 +269,6 @@ public final class ParseRsyncOutput {
             do {
                 stats = try calculateStats(true, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
             } catch {
-                writeDebugOutput()
                 addError(error as? RsyncParseError ?? .invalidOutputFormat("Unknown error calculating stats"))
             }
         }
@@ -326,7 +326,6 @@ public final class ParseRsyncOutput {
             do {
                 stats = try calculateStats(false, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
             } catch {
-                writeDebugOutput()
                 addError(error as? RsyncParseError ?? .invalidOutputFormat("Unknown error calculating stats"))
             }
         }
