@@ -148,13 +148,9 @@ public final class ParseRsyncOutput {
 
     private func writeDebugOutput() {
         let timestamp = ISO8601DateFormatter().string(from: Date())
-        let filename = "rsync_error_\(timestamp).txt"
-        let desktopURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first
-        
-        guard let fileURL = desktopURL?.appendingPathComponent(filename) else {
-            Logger.process.error("ParseRsyncOutput: Could not determine Desktop path")
-            return
-        }
+        let filename = "parse_rsync_error_\(timestamp).txt"
+        let homeURL = FileManager.default.homeDirectoryForCurrentUser
+        let fileURL = homeURL.appendingPathComponent(filename)
         
         let content = preparedoutputfromrsync.joined(separator: "\n")
         
