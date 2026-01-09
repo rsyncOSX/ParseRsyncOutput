@@ -151,9 +151,9 @@ public final class ParseRsyncOutput {
         let filename = "parse_rsync_error_\(timestamp).txt"
         let homeURL = FileManager.default.homeDirectoryForCurrentUser
         let fileURL = homeURL.appendingPathComponent(filename)
-        
+
         let content = preparedoutputfromrsync.joined(separator: "\n")
-        
+
         do {
             try content.write(to: fileURL, atomically: true, encoding: .utf8)
             Logger.process.info("ParseRsyncOutput: Debug output written to \(fileURL.path)")
@@ -483,7 +483,7 @@ public final class ParseRsyncOutput {
     public init(_ preparedoutputfromrsync: [String], _ rsyncversion: VersionRsync) {
         // Store the original output for debugging
         self.preparedoutputfromrsync = preparedoutputfromrsync
-        
+
         // Validate input
         guard !preparedoutputfromrsync.isEmpty else {
             addError(.invalidOutputFormat("Empty rsync output"))
