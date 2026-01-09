@@ -87,6 +87,7 @@ public final class ParseRsyncOutput {
     private var stats: String?
     public private(set) var errors: [RsyncParseError] = []
     public private(set) var warnings: [String] = []
+    private var preparedoutputfromrsync: [String] = []
 
     public var formatted_filestransferred: String {
         NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.filestransferred ?? 0),
@@ -122,7 +123,7 @@ public final class ParseRsyncOutput {
         NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.numberofdeletedfiles ?? 0),
                                         number: NumberFormatter.Style.none)
     }
-    
+
     public var formatted_totaltransferredfilessize: String {
         NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totaltransferredfilessize ?? 0),
                                         number: NumberFormatter.Style.decimal)
@@ -143,6 +144,26 @@ public final class ParseRsyncOutput {
     private func addWarning(_ warning: String) {
         warnings.append(warning)
         Logger.process.warning("ParseRsyncOutput Warning: \(warning)")
+    }
+
+    private func writeDebugOutput() {
+        let timestamp = ISO8601DateFormatter().string(from: Date())
+        let filename = "rsync_error_\(timestamp).txt"
+        let desktopURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first
+        
+        guard let fileURL = desktopURL?.appendingPathComponent(filename) else {
+            Logger.process.error("ParseRsyncOutput: Could not determine Desktop path")
+            return
+        }
+        
+        let content = preparedoutputfromrsync.joined(separator: "\n")
+        
+        do {
+            try content.write(to: fileURL, atomically: true, encoding: .utf8)
+            Logger.process.info("ParseRsyncOutput: Debug output written to \(fileURL.path)")
+        } catch {
+            Logger.process.error("ParseRsyncOutput: Failed to write debug output: \(error.localizedDescription)")
+        }
     }
 
     public func getstats() throws -> String? {
@@ -223,10 +244,10 @@ public final class ParseRsyncOutput {
         guard !filestransferred.isEmpty,
               !numberofcreatedfiles.isEmpty,
               !numberofdeletedfiles.isEmpty else { return false }
-        
-        return (filestransferred[0]  > 0 ||
-            numberofcreatedfiles[0]  > 0 ||
-            numberofdeletedfiles[0]  > 0)
+
+        return filestransferred[0] > 0 ||
+            numberofcreatedfiles[0] > 0 ||
+            numberofdeletedfiles[0] > 0
     }
 
     public func rsyncver3(stringnumbersonly: StringNumbersOnly) {
@@ -251,6 +272,7 @@ public final class ParseRsyncOutput {
             do {
                 stats = try calculateStats(true, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
             } catch {
+                writeDebugOutput()
                 addError(error as? RsyncParseError ?? .invalidOutputFormat("Unknown error calculating stats"))
             }
         }
@@ -287,13 +309,13 @@ public final class ParseRsyncOutput {
 
         // Parse number of files
         let my_numberoffiles = returnIntNumber(stringnumbersonly.numberoffiles[0])
-        if my_numberoffiles.isEmpty  {
+        if my_numberoffiles.isEmpty {
             addError(.invalidNumberFormat(field: "number of files",
                                           value: stringnumbersonly.numberoffiles[0]))
             return
         }
 
-        if  my_filestransferred[0] > 0 { datatosynchronize = true }
+        if my_filestransferred[0] > 0 { datatosynchronize = true }
 
         numbersonly = NumbersOnly(numberoffiles: my_numberoffiles[0],
                                   totaldirectories: 0,
@@ -308,6 +330,7 @@ public final class ParseRsyncOutput {
             do {
                 stats = try calculateStats(false, stringnumbersonly: stringnumbersonly, numbersonly: numbersonly)
             } catch {
+                writeDebugOutput()
                 addError(error as? RsyncParseError ?? .invalidOutputFormat("Unknown error calculating stats"))
             }
         }
@@ -462,6 +485,9 @@ public final class ParseRsyncOutput {
     }
 
     public init(_ preparedoutputfromrsync: [String], _ rsyncversion: VersionRsync) {
+        // Store the original output for debugging
+        self.preparedoutputfromrsync = preparedoutputfromrsync
+        
         // Validate input
         guard !preparedoutputfromrsync.isEmpty else {
             addError(.invalidOutputFormat("Empty rsync output"))
