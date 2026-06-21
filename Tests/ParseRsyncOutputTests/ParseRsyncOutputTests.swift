@@ -178,7 +178,7 @@ import Testing
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, .ver3)
             do {
                 let stats = try parsersyncoutput.getstats()
-                #expect(stats == "6846 files : 0.39 MB in 0.47 seconds")
+                #expect(stats == "6846 files : 394.3 KB in 0.47 seconds")
                 #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24_788_299.0)
                 #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
                 #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 7191)
@@ -198,7 +198,7 @@ import Testing
             let parsersyncoutput = ParseRsyncOutput(trimmedoutputfromrsync, .openrsync)
             do {
                 let stats = try parsersyncoutput.getstats()
-                #expect(stats == "6846 files : 0.38 MB in 2.25 seconds")
+                #expect(stats == "6846 files : 380.2 KB in 2.25 seconds")
                 #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24_788_299.0)
                 #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
                 #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
@@ -219,7 +219,7 @@ import Testing
 
             do {
                 let stats = try parsersyncoutput.getstats()
-                #expect(stats == "6966 files : 0.39 MB in 1.35 seconds")
+                #expect(stats == "6966 files : 386.9 KB in 1.35 seconds")
                 #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 24_929_166.0)
                 #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
                 #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
@@ -240,7 +240,7 @@ import Testing
 
             do {
                 let stats = try parsersyncoutput.getstats()
-                #expect(stats == "44 files : 1.81 MB in 1.49 seconds")
+                #expect(stats == "44 files : 1.8 MB in 1.49 seconds")
                 #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 254_016.0)
                 #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
                 #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 24)
@@ -261,7 +261,7 @@ import Testing
 
             do {
                 let stats = try parsersyncoutput.getstats()
-                #expect(stats == "3301 files : 0.19 MB in 1.42 seconds")
+                #expect(stats == "3301 files : 193.2 KB in 1.42 seconds")
                 #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 27_747_677.0)
                 #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
                 #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 3661)
@@ -282,7 +282,7 @@ import Testing
 
             do {
                 let stats = try parsersyncoutput.getstats()
-                #expect(stats == "44 files : 1.50 MB in 1.50 seconds")
+                #expect(stats == "44 files : 1.5 MB in 1.50 seconds")
                 #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 254_016.0)
                 #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
                 #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
@@ -303,7 +303,7 @@ import Testing
 
             do {
                 let stats = try parsersyncoutput.getstats()
-                #expect(stats == "3301 files : 0.30 MB in 0.16 seconds")
+                #expect(stats == "3301 files : 295.4 KB in 0.16 seconds")
                 #expect(parsersyncoutput.numbersonly?.totaltransferredfilessize == 27_747_677.0)
                 #expect(parsersyncoutput.numbersonly?.numberofdeletedfiles == 0)
                 #expect(parsersyncoutput.numbersonly?.numberofcreatedfiles == 0)
@@ -535,6 +535,7 @@ import Testing
         #expect(parser.formatted_filestransferred == "24")
         #expect(parser.formatted_numberofcreatedfiles == "15")
         #expect(parser.formatted_numberofdeletedfiles == "3")
+        #expect(parser.formatted_totaltransferredfilessize == "278.6 KB")
         // Note: formatted values depend on locale, so exact string matching may vary
         #expect(parser.formatted_numberoffiles.count > 0)
     }
@@ -555,12 +556,36 @@ import Testing
 
         let parser = ParseRsyncOutput(output, .ver3)
 
-        do {
-            let stats = try parser.getstats()
-            #expect(stats?.contains("files") == true)
-            #expect(stats?.contains("MB") == true)
-            #expect(stats?.contains("seconds") == true)
-        } catch {}
+        let stats = try #require(try parser.getstats())
+        #expect(stats == "10 files : 500 KB in 50.00 seconds")
+    }
+
+    @Test("Transferred data uses automatic human-readable units")
+    func transferredDataUsesAutomaticUnits() async throws {
+        let cases: [(bytes: Int, expectedSize: String, expectedStats: String)] = [
+            (8_000, "8 KB", "1 files : 8 KB in 8.00 seconds"),
+            (740_000_000, "740 MB", "1 files : 740 MB in 740000.00 seconds"),
+            (28_291_506_000, "28.3 GB", "1 files : 28.3 GB in 28291506.00 seconds"),
+        ]
+
+        for testCase in cases {
+            let output = [
+                "sent \(testCase.bytes) bytes  received 0 bytes  1000.00 bytes/sec",
+                "Number of files: 1 (reg: 1, dir: 0)",
+                "Number of regular files transferred: 1",
+                "Total file size: \(testCase.bytes) bytes",
+                "Total transferred file size: \(testCase.bytes) bytes",
+                "Number of created files: 0",
+                "Number of deleted files: 0",
+            ]
+
+            let parser = ParseRsyncOutput(output, .ver3)
+            let stats = try #require(try parser.getstats())
+
+            #expect(parser.formatted_totaltransferredfilessize == testCase.expectedSize)
+            #expect(stats == testCase.expectedStats)
+            #expect(parser.numbersonly?.totaltransferredfilessize == Double(testCase.bytes))
+        }
     }
 
     // MARK: - Real-World Output Tests

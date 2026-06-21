@@ -59,7 +59,7 @@ if parser.parseResult.isSuccess {
     
     if let stats = parser.stats {
         print("Summary: \(stats)")
-        // Output: "42 files : 117.64 MB in 20.03 seconds"
+        // Output: "42 files : 123.5 MB in 20.03 seconds"
     }
 } else {
     print("✗ Parsing failed")
@@ -96,6 +96,7 @@ print("Files: \(parser.formatted_numberoffiles)")
 print("Directories: \(parser.formatted_totaldirectories)")
 print("Total Size: \(parser.formatted_totalfilesize)")
 print("Transferred: \(parser.formatted_filestransferred)")
+print("Transferred Size: \(parser.formatted_totaltransferredfilessize)")
 print("Created: \(parser.formatted_numberofcreatedfiles)")
 print("Deleted: \(parser.formatted_numberofdeletedfiles)")
 print("Files + Dirs: \(parser.formatted_numberoffiles_totaldirectories)")
@@ -118,6 +119,7 @@ struct SyncResultView: View {
                     LabeledContent("Total Files", value: parser.formatted_numberoffiles)
                     LabeledContent("Directories", value: parser.formatted_totaldirectories)
                     LabeledContent("Total Size", value: parser.formatted_totalfilesize)
+                    LabeledContent("Transferred Size", value: parser.formatted_totaltransferredfilessize)
                 }
                 
                 Section("Changes") {
@@ -285,7 +287,7 @@ public init(_ preparedoutputfromrsync: [String], _ rsyncversion: VersionRsync)
 
 #### Formatted Properties
 
-All properties return localized, formatted strings:
+Formatted display helpers:
 
 - `formatted_filestransferred: String`
 - `formatted_numberoffiles: String`
@@ -294,6 +296,7 @@ All properties return localized, formatted strings:
 - `formatted_numberoffiles_totaldirectories: String`
 - `formatted_numberofcreatedfiles: String`
 - `formatted_numberofdeletedfiles: String`
+- `formatted_totaltransferredfilessize: String` - Automatic human-readable byte units (bytes, KB, MB, GB)
 
 #### Methods
 
@@ -343,12 +346,12 @@ sent 123456 bytes  received 789012 bytes  45678.00 bytes/sec
 The `stats` property provides a formatted summary:
 
 ```
-"42 files : 117.64 MB in 20.03 seconds"
+"42 files : 123.5 MB in 20.03 seconds"
 ```
 
 Calculated as:
 - Files: Number of transferred files
-- Size: Total bytes sent / 1,000,000 (converted to MB)
+- Size: Total bytes sent formatted automatically as bytes, KB, MB, or GB
 - Time: Total bytes sent / bytes per second
 
 ## Best Practices

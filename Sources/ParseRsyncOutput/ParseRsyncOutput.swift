@@ -125,8 +125,7 @@ public final class ParseRsyncOutput {
     }
 
     public var formatted_totaltransferredfilessize: String {
-        NumberFormatter.localizedString(from: NSNumber(value: numbersonly?.totaltransferredfilessize ?? 0),
-                                        number: NumberFormatter.Style.decimal)
+        formatByteSize(numbersonly?.totaltransferredfilessize ?? 0)
     }
 
     public var parseResult: ParseResult {
@@ -160,6 +159,36 @@ public final class ParseRsyncOutput {
         } catch {
             Logger.process.error("ParseRsyncOutput: Failed to write debug output: \(error.localizedDescription)")
         }
+    }
+
+    private func formatByteSize(_ bytes: Double) -> String {
+        let absBytes = abs(bytes)
+        let value: Double
+        let unit: String
+
+        switch absBytes {
+        case 1_000_000_000...:
+            value = bytes / 1_000_000_000
+            unit = "GB"
+        case 1_000_000...:
+            value = bytes / 1_000_000
+            unit = "MB"
+        case 1_000...:
+            value = bytes / 1_000
+            unit = "KB"
+        default:
+            value = bytes
+            unit = "bytes"
+        }
+
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.maximumFractionDigits = unit == "bytes" ? 0 : 1
+        formatter.minimumFractionDigits = 0
+
+        let formattedValue = formatter.string(from: NSNumber(value: value)) ?? String(format: "%.1f", value)
+        return "\(formattedValue) \(unit)"
     }
 
     public func getstats() throws -> String? {
@@ -364,8 +393,8 @@ public final class ParseRsyncOutput {
         let bytesTotal = bytesTotalsent
 
         return String(numbersonly.filestransferred) + " files : " +
-            String(format: "%.2f", (bytesTotal / 1000) / 1000) +
-            " MB in " + String(format: "%.2f", seconds) + " seconds"
+            formatByteSize(bytesTotal) +
+            " in " + String(format: "%.2f", seconds) + " seconds"
     }
 
     public func returnIntNumber(_ input: String) -> [Int] {
